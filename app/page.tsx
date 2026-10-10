@@ -100,13 +100,13 @@ function BoundarySplash() {
           <path d="M1000 0H95C40 76 70 162 22 242C-18 311 79 400 30 493C-9 568 75 660 26 749C-7 810 68 908 42 1000H1000Z" />
         </motion.svg>
 
-        <div className="splash-seam" aria-hidden="true" style={reduceMotion ? undefined : { opacity: copyOpacity }}><span /></div>
+        <div className="splash-seam" aria-hidden="true" style={reduceMotion ? undefined : { opacity: copyOpacity }} />
         <motion.div
           className="splash-copy"
           style={reduceMotion ? undefined : { opacity: copyOpacity, y: copyY }}
         >
-          <h1 id="boundary-splash-title">Protect Your<br /><em>Boundary.</em></h1>
-          <p>Company-Native AI action authorization for vendors deploying agents to enterprises.</p>
+          <h1 id="boundary-splash-title">Protect your<br /><em>Boundary.</em></h1>
+          <p>Company-native AI action authorization for vendors deploying agents.</p>
         </motion.div>
       </div>
     </section>
