@@ -1,0 +1,815 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Boundary · frame-showcase</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  /* ─────────────────────────────────────────────
+     Boundary tokens — mirror frame.md frontmatter
+     ───────────────────────────────────────────── */
+  :root{
+    /* Canonical */
+    --paper:#F2F0E9;
+    --ink:#121311;
+    --muted:#686961;
+    --line:#CBC9BF;
+    --line-dark:#343630;
+    --accent:#1647E8;
+    --allow:#14734F;
+    --approval:#B96D08;
+    --approval-text:#925706;
+    --deny:#C53627;
+    --primary-foreground:#FFFFFF;
+    --secondary:#E8E6DE;
+
+    /* Supporting light */
+    --surface-elevated:#FAF9F4;
+    --surface-panel:#F8F7F2;
+    --surface-table:#F7F6F1;
+    --surface-field:#F5F4EE;
+    --surface-context:#F4F3ED;
+    --surface-cta:#E9E7DF;
+    --surface-identity:#E8EBF9;
+    --divider-row:#D8D6CE;
+    --construction:#CCCBC2;
+    --light-on-dark:#EEEDE8;
+
+    /* Supporting dark */
+    --curtain:#10120F;
+    --dark-field:#121411;
+    --dark-panel:#171916;
+    --dark-code:#191B18;
+    --dark-tab:#232620;
+    --dark-rail:#3E423A;
+
+    /* Brand blue variants */
+    --accent-headline:#5275F6;
+    --accent-seam:#6E8DFF;
+    --accent-dark-head:#7693FF;
+    --accent-code-kw:#89A4FF;
+
+    /* Code accents */
+    --code-string:#E7B869;
+    --code-text:#C2C6BD;
+    --code-default:#A8ADA3;
+
+    /* Fonts (substitute stacks per Known Gaps) */
+    --font-sans: "Neue Haas Grotesk","Inter",-apple-system,"Helvetica Neue",Arial,sans-serif;
+    --font-mono: "Berkeley Mono","JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+
+    /* Gallery chrome */
+    --gallery:#0e0e0e;
+    --gallery-rule:#262623;
+    --gallery-muted:#8a8a82;
+    --gallery-text:#dcdcd4;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--gallery);color:var(--gallery-text);font-family:var(--font-sans);-webkit-font-smoothing:antialiased}
+  body{min-height:100vh}
+
+  /* ─────────────────────────────────────────────
+     Cover — full-bleed 16:9, FIRST element in body
+     ───────────────────────────────────────────── */
+  .cover-frame{
+    width:100%;
+    aspect-ratio:16/9;
+    container-type:size;
+    position:relative;
+    overflow:hidden;
+    background:var(--paper);
+  }
+
+  /* Doc chrome (after the cover) */
+  .doc{max-width:1400px;margin:0 auto;padding:0 48px 160px}
+  .doc section{padding:120px 0 20px;border-top:1px solid var(--gallery-rule)}
+  .doc section:first-of-type{border-top:0;padding-top:140px}
+  .section-head{display:flex;align-items:baseline;gap:28px;margin-bottom:56px}
+  .section-head .idx{
+    font-family:var(--font-mono);font-size:14px;color:var(--gallery-muted);
+    letter-spacing:0.02em
+  }
+  .section-head h2{
+    font-family:var(--font-sans);font-weight:500;font-size:42px;letter-spacing:-0.02em;
+    color:var(--gallery-text);line-height:1
+  }
+  .section-head .tag{
+    margin-left:auto;font-family:var(--font-mono);font-size:12px;color:var(--gallery-muted);
+    text-transform:uppercase;letter-spacing:0.18em;
+    border:1px solid var(--gallery-rule);padding:6px 10px;border-radius:2px
+  }
+  .section-rule{height:2px;background:var(--gallery-rule);margin-bottom:48px}
+
+  footer{
+    border-top:1px solid var(--gallery-rule);margin-top:140px;padding:48px;
+    color:var(--gallery-muted);font-family:var(--font-mono);font-size:12px;
+    display:flex;justify-content:space-between;letter-spacing:0.04em
+  }
+
+  /* ─────────────────────────────────────────────
+     Palette — ruled swatch grid
+     ───────────────────────────────────────────── */
+  .palette{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--gallery-rule)}
+  .swatch{
+    display:grid;grid-template-columns:120px 1fr auto;align-items:center;gap:20px;
+    padding:22px 20px;border-bottom:1px solid var(--gallery-rule);border-right:1px solid var(--gallery-rule)
+  }
+  .swatch:nth-child(3n){border-right:0}
+  .swatch .chip{width:88px;height:40px;border:1px solid rgba(255,255,255,0.08)}
+  .swatch .meta{display:flex;flex-direction:column;gap:4px}
+  .swatch .tok{font-family:var(--font-mono);font-size:12px;color:var(--gallery-text);letter-spacing:0.02em}
+  .swatch .role{font-size:12px;color:var(--gallery-muted);line-height:1.4}
+  .swatch .hex{font-family:var(--font-mono);font-size:11px;color:var(--gallery-muted)}
+  .palette-sub{font-family:var(--font-mono);font-size:12px;color:var(--gallery-muted);
+    text-transform:uppercase;letter-spacing:0.18em;padding:40px 0 16px}
+
+  /* ─────────────────────────────────────────────
+     Typography specimen
+     ───────────────────────────────────────────── */
+  .type-row{
+    display:grid;grid-template-columns:260px 1fr;gap:40px;align-items:baseline;
+    padding:28px 0;border-bottom:1px solid var(--gallery-rule)
+  }
+  .type-meta{display:flex;flex-direction:column;gap:4px}
+  .type-meta .tok{font-family:var(--font-mono);font-size:12px;color:var(--gallery-text)}
+  .type-meta .spec{font-family:var(--font-mono);font-size:11px;color:var(--gallery-muted);line-height:1.5}
+  .type-sample{color:var(--paper);font-family:var(--font-sans);overflow:hidden}
+  .type-sample.mono{font-family:var(--font-mono)}
+
+  /* ─────────────────────────────────────────────
+     Components — chips, cards built from token values
+     ───────────────────────────────────────────── */
+  .comp-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:28px}
+  .comp-card{
+    background:var(--paper);color:var(--ink);
+    padding:36px;border:1px solid var(--gallery-rule);
+    display:flex;flex-direction:column;gap:20px;min-height:220px;
+    justify-content:center;align-items:flex-start
+  }
+  .comp-card.dark{background:var(--dark-field);color:var(--light-on-dark)}
+  .comp-caption{
+    font-family:var(--font-mono);font-size:11px;color:var(--gallery-muted);
+    text-transform:uppercase;letter-spacing:0.14em;margin-top:12px
+  }
+
+  /* ─────────────────────────────────────────────
+     Component atoms — resolved against the FRAME container
+     (sizes in cqw render true inside aspect-ratio:16/9 tiles,
+     NOT against the viewport)
+     ───────────────────────────────────────────── */
+  .wordmark{
+    font-family:var(--font-sans);font-weight:500;color:var(--ink);
+    font-size:24cqw;line-height:0.84;letter-spacing:-0.03em
+  }
+  .display-hero{font-family:var(--font-sans);font-weight:500;color:var(--ink);
+    font-size:12cqw;line-height:0.92;letter-spacing:-0.025em}
+  .editorial-claim{font-family:var(--font-sans);font-weight:400;color:var(--ink);
+    font-size:7cqw;line-height:1.02;letter-spacing:-0.015em}
+  .section-head-type{font-family:var(--font-sans);font-weight:500;color:var(--ink);
+    font-size:4.2cqw;line-height:1.05;letter-spacing:-0.015em}
+  .stat-mega{font-family:var(--font-sans);font-weight:400;
+    font-size:18cqw;line-height:0.86;letter-spacing:-0.03em}
+  .stat-figure{font-family:var(--font-sans);font-weight:400;
+    font-size:9cqw;line-height:0.9;letter-spacing:-0.02em}
+  .stat-ledger{font-family:var(--font-sans);font-weight:500;
+    font-size:2.4cqw;font-variant-numeric:tabular-nums}
+  .code-line{font-family:var(--font-mono);font-weight:400;font-size:2cqw;line-height:1.4}
+  .eyebrow{font-family:var(--font-sans);font-weight:500;font-size:1.4cqw;
+    letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+  .rail-index{font-family:var(--font-mono);font-weight:500;font-size:1.4cqw;
+    color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .caption{font-family:var(--font-sans);font-size:1.5cqw;line-height:1.4;color:var(--muted)}
+
+  .rule-hairline-light{display:block;background:var(--line);height:2px;width:6cqw}
+  .rule-hairline-dark {display:block;background:var(--line-dark);height:2px;width:6cqw}
+  .rule-display       {display:block;background:var(--ink);height:4px;width:32cqw}
+  .rule-display.dark  {background:var(--light-on-dark)}
+
+  /* Pills — border + colored text (semantic) */
+  .state-pill{
+    display:inline-flex;align-items:center;gap:0.6cqw;
+    font-family:var(--font-sans);font-weight:500;font-size:1.4cqw;letter-spacing:0.14em;
+    text-transform:uppercase;white-space:nowrap;
+    padding:0.5cqw 1.2cqw;border-radius:999px;border:2px solid currentColor;background:transparent
+  }
+  .state-pill-allow   {color:var(--allow)}
+  .state-pill-approval{color:var(--approval-text);border-color:var(--approval)}
+  .state-pill-deny    {color:var(--deny)}
+  .state-pill-accent  {color:var(--accent)}
+
+  /* Giant pill buttons */
+  .button-primary-giant,
+  .button-accent-giant{
+    font-family:var(--font-sans);font-weight:500;font-size:4.2cqw;line-height:1.05;
+    letter-spacing:-0.015em;color:var(--primary-foreground);
+    padding:1.4cqw 3.4cqw;border-radius:999px;display:inline-flex;align-items:center;
+    white-space:nowrap
+  }
+  .button-primary-giant{background:var(--ink)}
+  .button-accent-giant{background:var(--accent)}
+
+  /* Policy cell */
+  .policy-cell{
+    background:var(--surface-elevated);color:var(--ink);
+    border:2px solid var(--line);border-radius:8px;
+    padding:2.2cqw 2.6cqw;
+    box-shadow:0 1.2cqw 2.4cqw rgba(18,19,17,0.06);
+    display:flex;flex-direction:column;gap:1.4cqw
+  }
+  .policy-cell .cell-head{display:flex;align-items:center;gap:1.2cqw;flex-wrap:wrap}
+  .policy-cell .verdict{font-family:var(--font-sans);font-weight:500;
+    font-size:4.2cqw;line-height:1;letter-spacing:-0.015em}
+  .policy-cell .verdict.allow{color:var(--allow)}
+  .policy-cell .verdict.deny {color:var(--deny)}
+  .policy-cell .verdict.review{color:var(--approval-text)}
+  .policy-cell .cell-rule{height:2px;background:var(--line);width:100%}
+  .policy-cell .mono{font-family:var(--font-mono);font-size:1.6cqw;color:var(--muted)}
+  .policy-cell .mono strong{color:var(--ink);font-weight:500}
+
+  /* Ledger */
+  .ledger-row{
+    display:grid;grid-template-columns:3cqw 1.2fr 0.8fr 1.6fr auto;
+    align-items:center;gap:2cqw;
+    padding:1.2cqw 0;border-bottom:2px solid var(--divider-row);
+    font-family:var(--font-sans);font-size:1.5cqw;color:var(--ink);
+    font-variant-numeric:tabular-nums
+  }
+  .ledger-row .ix{font-family:var(--font-mono);color:var(--muted);font-size:1.3cqw}
+  .ledger-row .subj{font-family:var(--font-mono);font-size:1.4cqw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ledger-row .act {font-weight:500}
+  .ledger-row .res {font-family:var(--font-mono);color:var(--muted);font-size:1.4cqw;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+  /* Code panel */
+  .code-panel{
+    background:var(--dark-code);color:var(--code-text);
+    border:2px solid var(--dark-rail);border-radius:8px;
+    padding:3cqw 3.4cqw;
+    font-family:var(--font-mono);font-size:2cqw;line-height:1.5;
+    position:relative
+  }
+  .code-panel .tab{
+    position:absolute;top:-2.4cqw;left:2cqw;
+    background:var(--dark-tab);color:var(--code-default);
+    font-family:var(--font-sans);font-weight:500;font-size:1.4cqw;
+    letter-spacing:0.14em;text-transform:uppercase;
+    padding:0.8cqw 1.6cqw;border-radius:4px 4px 0 0;
+    border:2px solid var(--dark-rail);border-bottom:none;
+    white-space:nowrap
+  }
+  .code-panel .k{color:var(--accent-code-kw)}
+  .code-panel .s{color:var(--code-string)}
+  .code-panel .c{color:var(--code-default)}
+  .code-panel .d{color:var(--code-text)}
+
+  /* ─────────────────────────────────────────────
+     Composition — frame tiles (contact sheet)
+     ───────────────────────────────────────────── */
+  .frames{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:48px
+  }
+  .frame-tile{display:flex;flex-direction:column;gap:14px}
+  .frame{
+    width:100%;
+    aspect-ratio:16/9;
+    container-type:size;
+    position:relative;
+    overflow:hidden;
+    background:var(--paper);
+    border:1px solid var(--gallery-rule)
+  }
+  .frame.portrait{aspect-ratio:9/16}
+  .frame-label{
+    display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+    font-family:var(--font-mono);font-size:12px;color:var(--gallery-muted);
+    letter-spacing:0.02em
+  }
+  .frame-label .name{color:var(--gallery-text)}
+  .frame-label .meta{color:var(--gallery-muted);text-transform:uppercase;letter-spacing:0.14em;font-size:10px}
+
+  /* Grounds */
+  .g-paper   {background:var(--paper)}
+  .g-ink     {background:var(--dark-field);color:var(--light-on-dark)}
+  .g-curtain {background:var(--curtain);color:var(--light-on-dark)}
+  .g-identity{background:var(--surface-identity)}
+  .g-cta     {background:var(--surface-cta)}
+
+  /* Frame layout layers always fill the frame */
+  .layer{position:absolute;inset:0;padding:5cqw;display:flex;flex-direction:column}
+  .layer.center{justify-content:center;align-items:center;text-align:center}
+
+  /* Chrome corners inside a frame */
+  .corner{position:absolute;display:flex;flex-direction:column;gap:0.8cqw;z-index:2}
+  .corner.tl{top:5cqw;left:5cqw;align-items:flex-start}
+  .corner.tr{top:5cqw;right:5cqw;align-items:flex-end;text-align:right}
+  .corner.bl{bottom:5cqw;left:5cqw;align-items:flex-start}
+  .corner.br{bottom:5cqw;right:5cqw;align-items:flex-end;text-align:right}
+
+  /* Dark-ground overrides */
+  .g-ink .wordmark,.g-ink .display-hero,.g-ink .editorial-claim,
+  .g-ink .section-head-type,.g-ink .stat-mega,.g-ink .stat-figure{color:var(--light-on-dark)}
+  .g-ink .eyebrow,.g-ink .rail-index{color:var(--accent-dark-head)}
+  .g-ink .rule-hairline-light{background:var(--line-dark)}
+  .g-ink .caption{color:var(--light-on-dark);opacity:0.85}
+
+  /* ─ Treatment-specific placements ─ */
+
+  /* 1. Identity Cover */
+  .t-cover .wordmark{position:absolute;left:0;right:0;bottom:11cqw;text-align:center}
+
+  /* 2. Oversized Claim */
+  .t-claim .claim-wrap{max-width:78cqw;display:flex;flex-direction:column;align-items:center;gap:3cqw}
+  .t-claim .accent-word{color:var(--accent)}
+
+  /* 3. Policy Cell */
+  .t-cell .policy-cell{width:52cqw}
+
+  /* 4. Ledger */
+  .t-ledger .layer{padding:5cqw}
+  .t-ledger .ledger-head{display:flex;align-items:baseline;justify-content:space-between;
+    margin-top:4.5cqw;margin-bottom:1.2cqw;gap:2cqw}
+  .t-ledger .ledger-head .section-head-type{font-size:3.4cqw;white-space:nowrap}
+  .t-ledger .rows{margin-top:1.2cqw}
+
+  /* 5. Mega Figure */
+  .t-stat .stat-wrap{display:flex;flex-direction:column;align-items:center;gap:2cqw}
+  .t-stat .unit{color:var(--accent-dark-head)}
+  .t-stat .caption{text-align:center;max-width:54cqw}
+
+  /* 6. Code Specimen */
+  .t-code .code-wrap{width:70cqw;margin:0 auto;position:relative;margin-top:10cqw}
+
+  /* 7. State Grid */
+  .t-grid .grid-wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:3cqw;width:100%;margin-top:4cqw}
+  .t-grid .mini-cell{
+    background:var(--surface-elevated);border:2px solid var(--line);border-radius:8px;
+    padding:3cqw 2.4cqw;display:flex;flex-direction:column;gap:1.6cqw;align-items:center;
+    aspect-ratio:1/1;justify-content:center
+  }
+  .t-grid .mini-verdict{font-family:var(--font-sans);font-weight:500;font-size:4.2cqw;line-height:1;letter-spacing:-0.015em}
+  .t-grid .mini-verdict.allow {color:var(--allow)}
+  .t-grid .mini-verdict.review{color:var(--approval-text)}
+  .t-grid .mini-verdict.deny  {color:var(--deny)}
+
+  /* 8. Closer */
+  .t-closer .close-wrap{display:flex;flex-direction:column;align-items:center;gap:3cqw}
+  .t-closer .brand-mark{position:absolute;left:0;right:0;bottom:5cqw;text-align:center;
+    font-family:var(--font-sans);font-weight:500;font-size:1.6cqw;color:var(--ink);letter-spacing:0.02em}
+
+  /* Portrait section */
+  .portrait-section .frames{grid-template-columns:repeat(3,minmax(260px,340px));justify-content:start;gap:36px}
+
+  /* Principles — do/don't cards (branded) */
+  .principles{display:grid;grid-template-columns:repeat(2,1fr);gap:0;border-top:2px solid var(--gallery-rule)}
+  .principle{
+    padding:40px 36px;border-bottom:1px solid var(--gallery-rule);border-right:1px solid var(--gallery-rule);
+    display:flex;flex-direction:column;gap:14px
+  }
+  .principle:nth-child(2n){border-right:0}
+  .principle .pid{font-family:var(--font-mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;
+    color:var(--gallery-muted)}
+  .principle .ptitle{font-family:var(--font-sans);font-weight:500;font-size:22px;color:var(--gallery-text);
+    letter-spacing:-0.01em;line-height:1.2}
+  .principle .pbody{font-family:var(--font-sans);font-size:14px;line-height:1.55;color:var(--gallery-muted)}
+  .principle.do .pid::before   {content:"DO · "; color:var(--allow)}
+  .principle.dont .pid::before {content:"DON'T · "; color:var(--deny)}
+
+  @media (max-width: 900px){
+    .frames{grid-template-columns:1fr}
+    .palette{grid-template-columns:1fr}
+    .swatch{border-right:0}
+    .comp-grid,.principles{grid-template-columns:1fr}
+    .doc{padding:0 24px 80px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ───── COVER (first element, no wrapper, no section label) ───── -->
+<div class="cover-frame t-cover g-paper">
+  <div class="corner tl">
+    <span class="rule-hairline-light"></span>
+    <span class="eyebrow">Authorization, inspected</span>
+  </div>
+  <div class="corner tr">
+    <span class="rail-index">01 / 08</span>
+  </div>
+  <div class="wordmark">BOUNDARY</div>
+  <div class="corner br">
+    <span class="rail-index">frame · 1920 × 1080</span>
+  </div>
+</div>
+
+<main class="doc">
+
+<!-- ───── Palette ───── -->
+<section>
+  <div class="section-head">
+    <span class="idx">§ 01</span>
+    <h2>Palette</h2>
+    <span class="tag">atoms · verbatim</span>
+  </div>
+  <div class="palette-sub">Canonical</div>
+  <div class="palette">
+    <div class="swatch"><div class="chip" style="background:#F2F0E9;border-color:#cbc9bf"></div><div class="meta"><span class="tok">--paper</span><span class="role">Primary page background</span></div><span class="hex">#F2F0E9</span></div>
+    <div class="swatch"><div class="chip" style="background:#121311"></div><div class="meta"><span class="tok">--ink</span><span class="role">Primary text, marks, solid controls</span></div><span class="hex">#121311</span></div>
+    <div class="swatch"><div class="chip" style="background:#686961"></div><div class="meta"><span class="tok">--muted</span><span class="role">Secondary text</span></div><span class="hex">#686961</span></div>
+    <div class="swatch"><div class="chip" style="background:#CBC9BF"></div><div class="meta"><span class="tok">--line</span><span class="role">Rules, borders, inputs (light)</span></div><span class="hex">#CBC9BF</span></div>
+    <div class="swatch"><div class="chip" style="background:#343630"></div><div class="meta"><span class="tok">--line-dark</span><span class="role">Rules, borders (dark)</span></div><span class="hex">#343630</span></div>
+    <div class="swatch"><div class="chip" style="background:#1647E8"></div><div class="meta"><span class="tok">--accent</span><span class="role">Brand emphasis, focus, active flow</span></div><span class="hex">#1647E8</span></div>
+    <div class="swatch"><div class="chip" style="background:#14734F"></div><div class="meta"><span class="tok">--allow</span><span class="role">Allowed · healthy · success</span></div><span class="hex">#14734F</span></div>
+    <div class="swatch"><div class="chip" style="background:#B96D08"></div><div class="meta"><span class="tok">--approval</span><span class="role">Review · approval-required</span></div><span class="hex">#B96D08</span></div>
+    <div class="swatch"><div class="chip" style="background:#C53627"></div><div class="meta"><span class="tok">--deny</span><span class="role">Denied · blocked · destructive</span></div><span class="hex">#C53627</span></div>
+  </div>
+
+  <div class="palette-sub">Dark surfaces</div>
+  <div class="palette">
+    <div class="swatch"><div class="chip" style="background:#10120F"></div><div class="meta"><span class="tok">--curtain</span><span class="role">Opening curtain</span></div><span class="hex">#10120F</span></div>
+    <div class="swatch"><div class="chip" style="background:#121411"></div><div class="meta"><span class="tok">--dark-field</span><span class="role">Full-width dark · footer</span></div><span class="hex">#121411</span></div>
+    <div class="swatch"><div class="chip" style="background:#171916"></div><div class="meta"><span class="tok">--dark-panel</span><span class="role">Runtime · control-plane</span></div><span class="hex">#171916</span></div>
+    <div class="swatch"><div class="chip" style="background:#191B18"></div><div class="meta"><span class="tok">--dark-code</span><span class="role">Hard-policy · code panel</span></div><span class="hex">#191B18</span></div>
+    <div class="swatch"><div class="chip" style="background:#232620"></div><div class="meta"><span class="tok">--dark-tab</span><span class="role">Active code tab</span></div><span class="hex">#232620</span></div>
+    <div class="swatch"><div class="chip" style="background:#3E423A"></div><div class="meta"><span class="tok">--dark-rail</span><span class="role">Dark dividers · rails</span></div><span class="hex">#3E423A</span></div>
+  </div>
+
+  <div class="palette-sub">Brand blue variants</div>
+  <div class="palette">
+    <div class="swatch"><div class="chip" style="background:#5275F6"></div><div class="meta"><span class="tok">--accent-headline</span><span class="role">Opening headline emphasis</span></div><span class="hex">#5275F6</span></div>
+    <div class="swatch"><div class="chip" style="background:#6E8DFF"></div><div class="meta"><span class="tok">--accent-seam</span><span class="role">Animated seam · scroll cue</span></div><span class="hex">#6E8DFF</span></div>
+    <div class="swatch"><div class="chip" style="background:#7693FF"></div><div class="meta"><span class="tok">--accent-dark-head</span><span class="role">Dark-surface headings · indicators</span></div><span class="hex">#7693FF</span></div>
+    <div class="swatch"><div class="chip" style="background:#89A4FF"></div><div class="meta"><span class="tok">--accent-code-kw</span><span class="role">Code keyword highlight</span></div><span class="hex">#89A4FF</span></div>
+  </div>
+</section>
+
+<!-- ───── Typography ───── -->
+<section>
+  <div class="section-head">
+    <span class="idx">§ 02</span>
+    <h2>Typography</h2>
+    <span class="tag">two ramps</span>
+  </div>
+  <div class="palette-sub">Reading ramp · px + cqw @ 1920</div>
+  <div>
+    <div class="type-row"><div class="type-meta"><span class="tok">reading.h1</span><span class="spec">72px · 3.75cqw · 500 · −0.02em · 1.05</span></div><div class="type-sample" style="font-size:60px;font-weight:500;letter-spacing:-0.02em;line-height:1.05">Precise, editorial, operational.</div></div>
+    <div class="type-row"><div class="type-meta"><span class="tok">reading.h2</span><span class="spec">48px · 2.50cqw · 500 · −0.015em · 1.1</span></div><div class="type-sample" style="font-size:44px;font-weight:500;letter-spacing:-0.015em">Authorization, inspected.</div></div>
+    <div class="type-row"><div class="type-meta"><span class="tok">reading.h3</span><span class="spec">32px · 1.67cqw · 500 · −0.01em · 1.2</span></div><div class="type-sample" style="font-size:30px;font-weight:500;letter-spacing:-0.01em">Allow · Review · Deny</div></div>
+    <div class="type-row"><div class="type-meta"><span class="tok">reading.lead</span><span class="spec">24px · 1.25cqw · 400 · 1.4</span></div><div class="type-sample" style="font-size:22px">The paper is the brand's confidence.</div></div>
+    <div class="type-row"><div class="type-meta"><span class="tok">reading.body</span><span class="spec">18px · 0.94cqw · 400 · 1.5</span></div><div class="type-sample" style="font-size:18px">Hierarchy comes from typography, spacing, rules, and contrast.</div></div>
+    <div class="type-row"><div class="type-meta"><span class="tok">reading.small</span><span class="spec">14px · 0.73cqw · 400 · 1.45 · chrome</span></div><div class="type-sample" style="font-size:14px">Chrome only — never load-bearing in frames.</div></div>
+  </div>
+
+  <div class="palette-sub">Display / hero ramp · cqw @ 1920</div>
+  <div>
+    <div class="type-row"><div class="type-meta"><span class="tok">display.wordmark-mega</span><span class="spec">24cqw · 500 · −0.03em · 0.84</span></div><div class="type-sample" style="font-size:96px;font-weight:500;letter-spacing:-0.03em;line-height:0.84">BOUNDARY</div></div>
+    <div class="type-row"><div class="type-meta"><span class="tok">display.display-hero</span><span class="spec">12cqw · 500 · −0.025em · 0.92</span></div><div class="type-sample" style="font-size:72px;font-weight:500;letter-spacing:-0.025em;line-height:0.92">Decide, don't guess.</div></div>
+    <div class="type-row"><div class="type-meta"><span class="tok">display.editorial-claim</span><span class="spec">7cqw · 400 · −0.015em · 1.02</span></div><div class="type-sample" style="font-size:48px;font-weight:400;letter-spacing:-0.015em;line-height:1.02">Every request is a decision, written down.</div></div>
+    <div class="type-row"><div class="type-meta"><span class="tok">display.section-head</span><span class="spec">4.2cqw · 500 · −0.015em · 1.05</span></div><div class="type-sample" style="font-size:32px;font-weight:500;letter-spacing:-0.015em">The ledger, between 09:42 and 09:48</div></div>
+    <div class="type-row"><div class="type-meta"><span class="tok">display.stat-mega</span><span class="spec">18cqw · 400 · −0.03em · 0.86</span></div><div class="type-sample" style="font-size:120px;font-weight:400;letter-spacing:-0.03em;line-height:0.86">99.<span style="color:var(--accent)">97%</span></div></div>
+    <div class="type-row"><div class="type-meta"><span class="tok">display.code-line</span><span class="spec">2cqw · 400 · 1.4 · mono</span></div><div class="type-sample mono" style="font-size:20px">allow if subject.role == <span style="color:#B96D08">"admin"</span></div></div>
+    <div class="type-row"><div class="type-meta"><span class="tok">display.eyebrow</span><span class="spec">1.4cqw · 500 · 0.14em · upper · floor</span></div><div class="type-sample" style="font-size:14px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted)">— decision log</div></div>
+  </div>
+</section>
+
+<!-- ───── Components ───── -->
+<section>
+  <div class="section-head">
+    <span class="idx">§ 03</span>
+    <h2>Components</h2>
+    <span class="tag">composed from tokens</span>
+  </div>
+  <div class="comp-grid">
+    <div class="comp-card">
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <span style="font-family:var(--font-sans);font-weight:500;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;padding:5px 12px;border-radius:999px;border:2px solid var(--allow);color:var(--allow)">Allow</span>
+        <span style="font-family:var(--font-sans);font-weight:500;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;padding:5px 12px;border-radius:999px;border:2px solid var(--approval);color:var(--approval-text)">Review</span>
+        <span style="font-family:var(--font-sans);font-weight:500;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;padding:5px 12px;border-radius:999px;border:2px solid var(--deny);color:var(--deny)">Deny</span>
+        <span style="font-family:var(--font-sans);font-weight:500;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;padding:5px 12px;border-radius:999px;border:2px solid var(--accent);color:var(--accent)">Allow If</span>
+      </div>
+      <div class="comp-caption">components.state-pill-* · bordered, text + border share the semantic color</div>
+    </div>
+    <div class="comp-card">
+      <span style="font-family:var(--font-sans);font-weight:500;font-size:22px;color:#fff;background:var(--ink);padding:14px 28px;border-radius:999px;display:inline-flex;white-space:nowrap">Request access</span>
+      <span style="font-family:var(--font-sans);font-weight:500;font-size:22px;color:#fff;background:var(--accent);padding:14px 28px;border-radius:999px;display:inline-flex;white-space:nowrap">Deploy policy</span>
+      <div class="comp-caption">components.button-primary-giant · components.button-accent-giant</div>
+    </div>
+    <div class="comp-card" style="padding:28px">
+      <div style="background:var(--surface-elevated);color:var(--ink);border:2px solid var(--line);border-radius:8px;padding:20px 22px;box-shadow:0 14px 28px rgba(18,19,17,0.06);display:flex;flex-direction:column;gap:12px;width:100%">
+        <div style="display:flex;align-items:center;gap:12px">
+          <span style="font-family:var(--font-sans);font-weight:500;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;padding:5px 12px;border-radius:999px;border:2px solid var(--allow);color:var(--allow)">Allow</span>
+          <span style="font-family:var(--font-mono);font-size:13px;color:var(--ink);font-weight:500">svc.deploy-bot</span>
+        </div>
+        <div style="height:2px;background:var(--line);width:100%"></div>
+        <div style="font-family:var(--font-sans);font-weight:500;font-size:34px;letter-spacing:-0.015em;color:var(--allow);line-height:1">ALLOW</div>
+        <div style="font-family:var(--font-mono);font-size:13px;color:var(--muted)">write · <strong style="color:var(--ink);font-weight:500">prod.payments.ledger</strong></div>
+      </div>
+      <div class="comp-caption">components.policy-cell · the focal artifact</div>
+    </div>
+    <div class="comp-card dark" style="padding:28px">
+      <div style="background:var(--dark-code);color:var(--code-text);border:2px solid var(--dark-rail);border-radius:8px;padding:28px 30px;font-family:var(--font-mono);font-size:15px;line-height:1.6;position:relative;width:100%;margin-top:22px">
+        <div style="position:absolute;top:-22px;left:20px;background:var(--dark-tab);color:var(--code-default);font-family:var(--font-sans);font-weight:500;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;padding:7px 14px;border-radius:4px 4px 0 0;border:2px solid var(--dark-rail);border-bottom:none;white-space:nowrap">policy.rego</div>
+        <div><span style="color:var(--accent-code-kw)">package</span> <span>boundary.payments</span></div>
+        <div><span style="color:var(--accent-code-kw)">default</span> allow = <span style="color:var(--code-string)">false</span></div>
+        <div><span style="color:var(--accent-code-kw)">allow if</span> {</div>
+        <div>&nbsp;&nbsp;input.subject.role == <span style="color:var(--code-string)">"admin"</span></div>
+        <div>}</div>
+      </div>
+      <div class="comp-caption" style="color:var(--accent-dark-head)">components.code-panel · code colors live only on dark</div>
+    </div>
+  </div>
+</section>
+
+<!-- ───── Composition Examples · 16:9 ───── -->
+<section>
+  <div class="section-head">
+    <span class="idx">§ 04</span>
+    <h2>Composition · 16:9</h2>
+    <span class="tag">eight treatments</span>
+  </div>
+
+  <div class="frames">
+
+    <!-- 1 · Identity Cover -->
+    <div class="frame-tile">
+      <div class="frame t-cover g-paper">
+        <div class="corner tl">
+          <span class="rule-hairline-light"></span>
+          <span class="eyebrow">Authorization, inspected</span>
+        </div>
+        <div class="corner tr"><span class="rail-index">01 / 08</span></div>
+        <div class="wordmark">BOUNDARY</div>
+      </div>
+      <div class="frame-label"><span class="name">01 · Identity Cover</span><span class="meta">identity · sparse</span></div>
+    </div>
+
+    <!-- 2 · Oversized Claim -->
+    <div class="frame-tile">
+      <div class="frame t-claim g-paper">
+        <div class="corner tl">
+          <span class="rule-hairline-light"></span>
+          <span class="eyebrow">Thesis</span>
+        </div>
+        <div class="corner tr"><span class="rail-index">02 / 08</span></div>
+        <div class="layer center">
+          <div class="claim-wrap">
+            <div class="editorial-claim">Every request is a <span class="accent-word">decision</span>, written down.</div>
+            <span class="rule-display"></span>
+          </div>
+        </div>
+      </div>
+      <div class="frame-label"><span class="name">02 · Oversized Claim</span><span class="meta">editorial · sparse</span></div>
+    </div>
+
+    <!-- 3 · Focal Artifact — Policy Cell -->
+    <div class="frame-tile">
+      <div class="frame t-cell g-paper">
+        <div class="corner tl">
+          <span class="rule-hairline-light"></span>
+          <span class="eyebrow">Decision</span>
+        </div>
+        <div class="corner tr"><span class="rail-index">03 / 08</span></div>
+        <div class="layer center">
+          <div class="policy-cell">
+            <div class="cell-head">
+              <span class="state-pill state-pill-allow">Allow</span>
+              <span class="mono"><strong>svc.deploy-bot</strong></span>
+            </div>
+            <div class="cell-rule"></div>
+            <div class="verdict allow">ALLOW</div>
+            <div class="mono">write · <strong>prod.payments.ledger</strong></div>
+          </div>
+        </div>
+      </div>
+      <div class="frame-label"><span class="name">03 · Focal Artifact — Policy Cell</span><span class="meta">focal-artifact · sparse</span></div>
+    </div>
+
+    <!-- 4 · Ledger -->
+    <div class="frame-tile">
+      <div class="frame t-ledger g-paper">
+        <div class="corner tl"><span class="rule-hairline-light"></span><span class="eyebrow">Ledger</span></div>
+        <div class="corner tr"><span class="rail-index">04 / 08</span></div>
+        <div class="layer">
+          <div class="ledger-head">
+            <div class="section-head-type">09:42 — 09:48</div>
+            <span class="rule-display"></span>
+          </div>
+          <div class="rows">
+            <div class="ledger-row"><span class="ix">01</span><span class="subj">svc.deploy-bot</span><span class="act">write</span><span class="res">prod.payments.ledger</span><span class="state-pill state-pill-allow">Allow</span></div>
+            <div class="ledger-row"><span class="ix">02</span><span class="subj">a.chen@</span><span class="act">read</span><span class="res">prod.customers.pii</span><span class="state-pill state-pill-approval">Review</span></div>
+            <div class="ledger-row"><span class="ix">03</span><span class="subj">svc.audit</span><span class="act">read</span><span class="res">prod.*.ledger</span><span class="state-pill state-pill-allow">Allow</span></div>
+            <div class="ledger-row"><span class="ix">04</span><span class="subj">r.okoye@</span><span class="act">impersonate</span><span class="res">prod.admin.root</span><span class="state-pill state-pill-deny">Deny</span></div>
+            <div class="ledger-row"><span class="ix">05</span><span class="subj">svc.scheduler</span><span class="act">write</span><span class="res">prod.jobs.queue</span><span class="state-pill state-pill-allow">Allow</span></div>
+            <div class="ledger-row"><span class="ix">06</span><span class="subj">m.ito@</span><span class="act">delete</span><span class="res">prod.customers.row</span><span class="state-pill state-pill-deny">Deny</span></div>
+            <div class="ledger-row"><span class="ix">07</span><span class="subj">svc.export</span><span class="act">read</span><span class="res">prod.payments.*</span><span class="state-pill state-pill-approval">Review</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="frame-label"><span class="name">04 · Authorization Ledger</span><span class="meta">data · dense-exception</span></div>
+    </div>
+
+    <!-- 5 · Mega Figure -->
+    <div class="frame-tile">
+      <div class="frame t-stat g-ink">
+        <div class="corner tl"><span class="rule-hairline-light"></span><span class="eyebrow">Latency, p99</span></div>
+        <div class="corner tr"><span class="rail-index">05 / 08</span></div>
+        <div class="layer center">
+          <div class="stat-wrap">
+            <div class="stat-mega">4<span class="unit">ms</span></div>
+            <div class="caption">End-to-end decision time, across the last — figure — requests.</div>
+          </div>
+        </div>
+      </div>
+      <div class="frame-label"><span class="name">05 · Mega Figure</span><span class="meta">stat · sparse</span></div>
+    </div>
+
+    <!-- 6 · Code Specimen -->
+    <div class="frame-tile">
+      <div class="frame t-code g-ink">
+        <div class="corner tl">
+          <span class="rule-hairline-dark"></span>
+          <div style="display:flex;align-items:center;gap:1.4cqw"><span class="eyebrow">Rule</span><span class="state-pill state-pill-accent">Allow If</span></div>
+        </div>
+        <div class="corner tr"><span class="rail-index">06 / 08</span></div>
+        <div class="code-wrap">
+          <div class="code-panel">
+            <div class="tab">policy.rego</div>
+            <div><span class="k">package</span> <span class="d">boundary.payments</span></div>
+            <div><span class="k">default</span> <span class="d">allow =</span> <span class="s">false</span></div>
+            <div><span class="k">allow if</span> <span class="d">{</span></div>
+            <div>&nbsp;&nbsp;<span class="d">input.subject.role ==</span> <span class="s">"admin"</span></div>
+            <div>&nbsp;&nbsp;<span class="d">input.resource ==</span> <span class="s">"ledger"</span></div>
+            <div><span class="d">}</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="frame-label"><span class="name">06 · Code Specimen</span><span class="meta">brand-signature · standard</span></div>
+    </div>
+
+    <!-- 7 · State Grid -->
+    <div class="frame-tile">
+      <div class="frame t-grid g-paper">
+        <div class="corner tl"><span class="rule-hairline-light"></span><span class="eyebrow">Three outcomes</span></div>
+        <div class="corner tr"><span class="rail-index">07 / 08</span></div>
+        <div class="layer" style="padding-top:14cqw;justify-content:flex-start">
+          <div class="grid-wrap">
+            <div class="mini-cell">
+              <span class="state-pill state-pill-allow">Allow</span>
+              <div class="mini-verdict allow">ALLOW</div>
+            </div>
+            <div class="mini-cell">
+              <span class="state-pill state-pill-approval">Review</span>
+              <div class="mini-verdict review">REVIEW</div>
+            </div>
+            <div class="mini-cell">
+              <span class="state-pill state-pill-deny">Deny</span>
+              <div class="mini-verdict deny">DENY</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="frame-label"><span class="name">07 · State Grid</span><span class="meta">catalog · standard</span></div>
+    </div>
+
+    <!-- 8 · Closer -->
+    <div class="frame-tile">
+      <div class="frame t-closer g-cta">
+        <div class="corner tl"><span class="rule-hairline-light"></span><span class="eyebrow">Start</span></div>
+        <div class="corner tr"><span class="rail-index">08 / 08</span></div>
+        <div class="layer center">
+          <div class="close-wrap">
+            <span class="button-accent-giant">Deploy a policy</span>
+          </div>
+        </div>
+        <div class="brand-mark">BOUNDARY</div>
+      </div>
+      <div class="frame-label"><span class="name">08 · Closer</span><span class="meta">closer · sparse</span></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ───── Portrait · 9:16 ───── -->
+<section class="portrait-section">
+  <div class="section-head">
+    <span class="idx">§ 05</span>
+    <h2>Portrait · 9:16</h2>
+    <span class="tag">reflow proof</span>
+  </div>
+
+  <div class="frames">
+
+    <div class="frame-tile">
+      <div class="frame portrait t-cover g-paper">
+        <div class="corner tl">
+          <span class="rule-hairline-light"></span>
+          <span class="eyebrow">Authorization, inspected</span>
+        </div>
+        <div class="corner tr"><span class="rail-index">01 / 08</span></div>
+        <!-- 9:16 reflow — stack BOUND / ARY -->
+        <div class="layer center" style="justify-content:flex-end;padding-bottom:16cqw">
+          <div style="font-family:var(--font-sans);font-weight:500;color:var(--ink);font-size:36cqw;line-height:0.84;text-align:center;letter-spacing:-0.03em">BOUND<br>ARY</div>
+        </div>
+      </div>
+      <div class="frame-label"><span class="name">01 · Identity Cover</span><span class="meta">9:16 · sparse</span></div>
+    </div>
+
+    <div class="frame-tile">
+      <div class="frame portrait t-claim g-paper">
+        <div class="corner tl">
+          <span class="rule-hairline-light"></span>
+          <span class="eyebrow">Thesis</span>
+        </div>
+        <div class="corner tr"><span class="rail-index">02 / 08</span></div>
+        <div class="layer center">
+          <div class="claim-wrap" style="max-width:86cqw">
+            <div style="font-family:var(--font-sans);font-weight:400;color:var(--ink);font-size:10cqw;line-height:1.02;letter-spacing:-0.015em">Every request is a <span style="color:var(--accent)">decision</span>, written down.</div>
+            <span class="rule-display"></span>
+          </div>
+        </div>
+      </div>
+      <div class="frame-label"><span class="name">02 · Oversized Claim</span><span class="meta">9:16 · sparse</span></div>
+    </div>
+
+    <div class="frame-tile">
+      <div class="frame portrait t-cell g-paper">
+        <div class="corner tl">
+          <span class="rule-hairline-light"></span>
+          <span class="eyebrow">Decision</span>
+        </div>
+        <div class="corner tr"><span class="rail-index">03 / 08</span></div>
+        <div class="layer center">
+          <div style="background:var(--surface-elevated);color:var(--ink);border:2px solid var(--line);border-radius:8px;padding:4cqw 4.4cqw;box-shadow:0 2cqw 4cqw rgba(18,19,17,0.06);display:flex;flex-direction:column;gap:2.4cqw;width:82cqw">
+            <span class="state-pill state-pill-allow" style="align-self:flex-start">Allow</span>
+            <span style="font-family:var(--font-mono);font-size:2.6cqw;color:var(--muted)"><strong style="color:var(--ink);font-weight:500">svc.deploy-bot</strong></span>
+            <div style="height:2px;background:var(--line);width:100%"></div>
+            <div style="font-family:var(--font-sans);font-weight:500;font-size:9cqw;line-height:1;letter-spacing:-0.015em;color:var(--allow)">ALLOW</div>
+            <div style="font-family:var(--font-mono);font-size:2.6cqw;color:var(--muted)">write · <strong style="color:var(--ink);font-weight:500">prod.payments.ledger</strong></div>
+          </div>
+        </div>
+      </div>
+      <div class="frame-label"><span class="name">03 · Focal Artifact</span><span class="meta">9:16 · sparse</span></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ───── Principles ───── -->
+<section>
+  <div class="section-head">
+    <span class="idx">§ 06</span>
+    <h2>Principles</h2>
+    <span class="tag">craft bar</span>
+  </div>
+  <div class="principles">
+    <div class="principle do">
+      <span class="pid">squint</span>
+      <div class="ptitle">One element dominates at 3–6×.</div>
+      <div class="pbody">Wordmark, claim, policy cell, or mega figure. A chasm, not a ramp. If two elements compete, demote one or split into two frames.</div>
+    </div>
+    <div class="principle do">
+      <span class="pid">silence</span>
+      <div class="ptitle">Sparse plates read 55–75% empty.</div>
+      <div class="pbody">The paper is the brand's confidence. The ledger is the one named density exception — nothing else earns that density.</div>
+    </div>
+    <div class="principle do">
+      <span class="pid">restraint</span>
+      <div class="ptitle">Accent fires once per frame.</div>
+      <div class="pbody">The electric blue appears at full strength exactly once. The semantic triad fires together only in the state-grid plate.</div>
+    </div>
+    <div class="principle do">
+      <span class="pid">semantics</span>
+      <div class="ptitle">Allow is green, approval is amber, deny is red.</div>
+      <div class="pbody">Carried verbatim from design.md §4. Never swapped for variety. Always paired with a label — color is never the only cue.</div>
+    </div>
+    <div class="principle dont">
+      <span class="pid">slide tell</span>
+      <div class="ptitle">Headline left, graphic right, every frame.</div>
+      <div class="pbody">The anti-pattern that reads as a generic SaaS deck. Lean centered by default; vary the anchor between consecutive frames.</div>
+    </div>
+    <div class="principle dont">
+      <span class="pid">chrome drift</span>
+      <div class="ptitle">A new hex, radius, or weight the source doesn't define.</div>
+      <div class="pbody">Atoms are sacred. If you need a value the frontmatter doesn't carry, promote it as a token first — never invent it inline.</div>
+    </div>
+    <div class="principle dont">
+      <span class="pid">decoration</span>
+      <div class="ptitle">Multicolor gradients, type shadows, glass chrome.</div>
+      <div class="pbody">Depth ceiling is a single lift on the policy cell. Rules do structural work; nothing else gets to decorate.</div>
+    </div>
+    <div class="principle dont">
+      <span class="pid">code on paper</span>
+      <div class="ptitle">Syntax colors on a light surface.</div>
+      <div class="pbody">Code colors (§3) belong only inside the dark code panel. On paper they read as rainbow noise against ink.</div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <span>Boundary · frame-showcase · 2026-10-04</span>
+  <span>atoms sacred · composition free · numbers from the script</span>
+</footer>
+
+</body>
+</html>

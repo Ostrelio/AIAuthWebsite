@@ -105,11 +105,8 @@ function BoundarySplash() {
           className="splash-copy"
           style={reduceMotion ? undefined : { opacity: copyOpacity, y: copyY }}
         >
-          <h1 id="boundary-splash-title">Protect your<br /><em>boundary.</em></h1>
-          <p>Autonomous software moves fast. Control stays ahead.</p>
-        </motion.div>
-        <motion.div className="splash-scroll-cue mono" style={reduceMotion ? undefined : { opacity: copyOpacity }}>
-          <span>SCROLL TO OPEN</span><i aria-hidden="true" />
+          <h1 id="boundary-splash-title">Protect Your<br /><em>Boundary.</em></h1>
+          <p>Company-Native AI action authorization for vendors deploying agents to enterprises.</p>
         </motion.div>
       </div>
     </section>
