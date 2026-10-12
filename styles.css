@@ -1,0 +1,155 @@
+/* Functional layer for the canvas design.
+   Layout and color live in index.html (Tailwind). This file covers
+   the runtime log, particle stage, and states the static export omitted. */
+
+.pipeline-stage {
+  position: relative;
+  min-height: 280px;
+}
+
+.pipeline-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.pipeline-grid {
+  position: relative;
+  z-index: 2;
+}
+
+#iris-core.breach-alert {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 36px rgba(239, 68, 68, 0.55), inset 0 0 18px rgba(239, 68, 68, 0.25) !important;
+}
+
+.mode-btn {
+  cursor: pointer;
+  font-family: Inter, "Segoe UI", system-ui, sans-serif;
+}
+
+.mode-btn.active {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: #38bdf8;
+  color: #ffffff;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.3);
+}
+
+.stream-feed-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  max-height: 132px;
+  overflow: hidden;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+}
+
+.stream-feed-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: #a1a1aa;
+  padding: 4px 6px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.03);
+  animation: slideFeed 0.3s ease-out;
+}
+
+.feed-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.feed-time {
+  color: #52525b;
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+.feed-action {
+  color: #93c5fd;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.feed-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.badge-ok {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.badge-blocked {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+}
+
+.form-success {
+  display: none;
+  margin-top: 12px;
+  color: #34d399;
+  font-size: 13px;
+  text-align: center;
+}
+
+@keyframes slideFeed {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 720px) {
+  .sd-unified-nav {
+    display: none;
+  }
+}
+
+.flow-beam {
+  position: relative;
+  overflow: hidden;
+}
+
+.flow-beam::after {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: 0;
+  width: 4px;
+  height: 28px;
+  border-radius: 999px;
+  background: linear-gradient(to bottom, transparent, #e0f2fe 20%, #38bdf8 55%, #a855f7 85%, transparent);
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.9);
+  transform: translateY(-32px);
+  animation: beamDown 1.8s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+@keyframes beamDown {
+  0% { transform: translateY(-32px); opacity: 0; }
+  18% { opacity: 1; }
+  100% { transform: translateY(84px); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stream-feed-item,
+  .ambient-flow,
+  .flow-beam::after {
+    animation: none;
+  }
+}

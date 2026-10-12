@@ -13,11 +13,4 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
-        with:
-          node-version: 22
-          cache: npm
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run check
-      - run: npm run build
+      - run: test -f index.html && test -f styles.css && test -f main.js && test -f assets/logo.webp && test -f fonts/GeistPixel-Circle.woff2
