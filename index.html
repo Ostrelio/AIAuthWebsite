@@ -237,9 +237,9 @@
             </p>
           </div>
 
-          <div class="bg-[#12131c]/80 border border-white/10 rounded-[18px] p-2.5 px-4 mb-5 backdrop-blur-md flex flex-wrap items-center justify-between gap-3">
+          <div class="sim-toolbar bg-[#12131c]/80 border border-white/10 rounded-[18px] p-2.5 px-4 mb-5 backdrop-blur-md flex flex-wrap items-center justify-between gap-3">
             <div class="font-display text-[11px] text-[#71717a] tracking-widest">INTERACTIVE SIMULATION:</div>
-            <div class="flex flex-wrap gap-2.5">
+            <div class="sim-modes">
               <button id="btn-mode-stream" type="button" class="mode-btn active bg-white/5 border border-white/10 text-[#d4d4d8] rounded-full py-[7px] px-[15px] text-[12.5px] font-medium flex items-center gap-2">
                 <span class="w-[7px] h-[7px] rounded-full bg-[#38bdf8] shadow-[0_0_8px_#38bdf8]"></span>
                 Normal traffic
@@ -261,7 +261,7 @@
               <div class="pipeline-grid grid grid-cols-1 md:grid-cols-[1fr_1.2fr_1fr] gap-6 md:gap-8 items-center min-h-[280px]">
                 <div class="flex flex-col gap-3">
                   <div class="font-display text-[10.5px] tracking-widest text-[#71717a] uppercase mb-1">AUTONOMOUS AGENTS</div>
-                  <div class="bg-[#14161e]/85 border border-white/10 rounded-2xl p-3 px-3.5 flex items-center gap-3">
+                  <div class="bg-[#14161e]/85 border border-white/10 rounded-2xl p-3 px-3.5 flex items-center gap-3" data-pipeline-node="agent">
                     <div class="w-[34px] h-[34px] rounded-lg bg-white/5 flex items-center justify-center text-sm shrink-0">
                       <i class="fa-solid fa-brain text-[#38bdf8]"></i>
                     </div>
@@ -271,7 +271,7 @@
                     </div>
                     <span class="w-2 h-2 rounded-full bg-[#38bdf8] shadow-[0_0_10px_#38bdf8] shrink-0"></span>
                   </div>
-                  <div class="bg-[#14161e]/85 border border-white/10 rounded-2xl p-3 px-3.5 flex items-center gap-3">
+                  <div class="bg-[#14161e]/85 border border-white/10 rounded-2xl p-3 px-3.5 flex items-center gap-3" data-pipeline-node="agent">
                     <div class="w-[34px] h-[34px] rounded-lg bg-white/5 flex items-center justify-center text-sm shrink-0">
                       <i class="fa-solid fa-bolt text-[#a855f7]"></i>
                     </div>
@@ -281,7 +281,7 @@
                     </div>
                     <span class="w-2 h-2 rounded-full bg-[#a855f7] shadow-[0_0_10px_#a855f7] shrink-0"></span>
                   </div>
-                  <div class="bg-[#14161e]/85 border border-white/10 rounded-2xl p-3 px-3.5 flex items-center gap-3">
+                  <div class="bg-[#14161e]/85 border border-white/10 rounded-2xl p-3 px-3.5 flex items-center gap-3" data-pipeline-node="agent">
                     <div class="w-[34px] h-[34px] rounded-lg bg-white/5 flex items-center justify-center text-sm shrink-0">
                       <i class="fa-solid fa-robot text-[#10b981]"></i>
                     </div>
@@ -319,7 +319,7 @@
 
                 <div class="flex flex-col gap-3">
                   <div class="font-display text-[10.5px] tracking-widest text-[#71717a] uppercase mb-1">ENTERPRISE INFRASTRUCTURE</div>
-                  <div class="bg-[#14161e]/85 border border-white/10 rounded-2xl p-3 px-3.5 flex items-center gap-3">
+                  <div class="bg-[#14161e]/85 border border-white/10 rounded-2xl p-3 px-3.5 flex items-center gap-3" data-pipeline-node="system">
                     <div class="w-[34px] h-[34px] rounded-lg bg-white/5 flex items-center justify-center text-[15px] shrink-0">
                       <i class="fa-brands fa-stripe text-[#635bff]"></i>
                     </div>
@@ -329,7 +329,7 @@
                     </div>
                     <span class="font-mono text-xs text-[#34d399]">✓</span>
                   </div>
-                  <div class="bg-[#14161e]/85 border border-white/10 rounded-2xl p-3 px-3.5 flex items-center gap-3">
+                  <div class="bg-[#14161e]/85 border border-white/10 rounded-2xl p-3 px-3.5 flex items-center gap-3" data-pipeline-node="system">
                     <div class="w-[34px] h-[34px] rounded-lg bg-white/5 flex items-center justify-center text-[15px] shrink-0">
                       <i class="fa-brands fa-aws text-[#ff9900]"></i>
                     </div>
@@ -339,7 +339,7 @@
                     </div>
                     <span class="font-mono text-xs text-[#34d399]">✓</span>
                   </div>
-                  <div class="bg-[#14161e]/85 border border-white/10 rounded-2xl p-3 px-3.5 flex items-center gap-3">
+                  <div class="bg-[#14161e]/85 border border-white/10 rounded-2xl p-3 px-3.5 flex items-center gap-3" data-pipeline-node="system">
                     <div class="w-[34px] h-[34px] rounded-lg bg-white/5 flex items-center justify-center text-[15px] shrink-0">
                       <i class="fa-solid fa-database text-[#38bdf8]"></i>
                     </div>

@@ -115,9 +115,77 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+.sim-modes {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 10px;
+}
+
 @media (max-width: 720px) {
-  .sd-unified-nav {
+  /* Beat the header rules in the later style block in index.html. */
+  .sd-header-wrapper.sd-header-wrapper {
+    padding: 10px 12px;
+    padding-top: max(10px, env(safe-area-inset-top));
+  }
+
+  header.sd-unified-header {
+    gap: 8px;
+    max-width: 100%;
+    padding: 4px 6px 4px 8px;
+  }
+
+  nav.sd-unified-nav {
     display: none;
+  }
+
+  a.sd-brand-left {
+    min-width: 0;
+    gap: 8px;
+  }
+
+  a.sd-brand-left .sd-brand-icon-wrap {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+  }
+
+  a.sd-brand-left .sd-brand-name {
+    font-size: 12.5px;
+    letter-spacing: 0.08em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  a.sd-header-access {
+    flex-shrink: 0;
+    font-size: 12px;
+    padding: 7px 12px;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 640px) {
+  div.sim-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  div.sim-modes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-items: center;
+    gap: 8px;
+  }
+
+  div.sim-modes .mode-btn {
+    font-size: 11px;
+    padding: 6px 10px;
+  }
+
+  div.sim-modes .mode-btn:last-child {
+    grid-column: 1 / -1;
   }
 }
 

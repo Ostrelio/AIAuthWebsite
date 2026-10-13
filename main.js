@@ -112,41 +112,90 @@ function initPipelineSimulation() {
   const ctx = canvas.getContext('2d');
   let width = 0;
   let height = 0;
+  let particles = [];
 
   function resizeCanvas() {
     const rect = container.getBoundingClientRect();
-    width = rect.width;
-    height = rect.height;
+    const nextWidth = rect.width;
+    const nextHeight = rect.height;
+    const layoutChanged = nextWidth !== width || nextHeight !== height;
+    width = nextWidth;
+    height = nextHeight;
     canvas.width = width * window.devicePixelRatio;
     canvas.height = height * window.devicePixelRatio;
     ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    if (layoutChanged) particles = [];
   }
 
   resizeCanvas();
   window.addEventListener('resize', resizeCanvas);
 
   // Particles system
-  let particles = [];
   let currentMode = 'stream'; // 'stream' | 'breach' | 'swarm'
   let spawnInterval = 180;
   let lastSpawn = 0;
 
-  // Active agents & systems coordinates (approximated relative to container)
-  const getCoordinates = () => {
+  const AGENT_COLORS = ['#38bdf8', '#a855f7', '#10b981'];
+
+  function centerInStage(el, stageRect) {
+    const r = el.getBoundingClientRect();
     return {
-      agents: [
-        { x: width * 0.15, y: height * 0.22, name: '6.1 Sol', color: '#38bdf8' },
-        { x: width * 0.15, y: height * 0.44, name: 'Claude Sonnet 5', color: '#a855f7' },
-        { x: width * 0.15, y: height * 0.66, name: 'Grok 4.5', color: '#10b981' }
-      ],
-      center: { x: width * 0.5, y: height * 0.44 },
-      systems: [
-        { x: width * 0.85, y: height * 0.22, name: 'Stripe & SWIFT' },
-        { x: width * 0.85, y: height * 0.44, name: 'AWS & Kubernetes' },
-        { x: width * 0.85, y: height * 0.66, name: 'Postgres & Snowflake' }
-      ]
+      x: r.left + r.width / 2 - stageRect.left,
+      y: r.top + r.height / 2 - stageRect.top
+    };
+  }
+
+  // Card centers, so the path follows the stacked mobile layout and the desktop row.
+  const getCoordinates = () => {
+    const stageRect = container.getBoundingClientRect();
+    const agentEls = container.querySelectorAll('[data-pipeline-node="agent"]');
+    const systemEls = container.querySelectorAll('[data-pipeline-node="system"]');
+    const gate = document.getElementById('iris-core');
+
+    if (!agentEls.length || !systemEls.length || !gate || stageRect.width === 0) {
+      return {
+        agents: [
+          { x: width * 0.15, y: height * 0.22, color: AGENT_COLORS[0] },
+          { x: width * 0.15, y: height * 0.44, color: AGENT_COLORS[1] },
+          { x: width * 0.15, y: height * 0.66, color: AGENT_COLORS[2] }
+        ],
+        center: { x: width * 0.5, y: height * 0.44 },
+        systems: [
+          { x: width * 0.85, y: height * 0.22 },
+          { x: width * 0.85, y: height * 0.44 },
+          { x: width * 0.85, y: height * 0.66 }
+        ]
+      };
+    }
+
+    return {
+      agents: Array.from(agentEls).map((el, i) => ({
+        ...centerInStage(el, stageRect),
+        color: AGENT_COLORS[i] || AGENT_COLORS[0]
+      })),
+      center: centerInStage(gate, stageRect),
+      systems: Array.from(systemEls).map((el) => centerInStage(el, stageRect))
     };
   };
+
+  function pointOnCurve(x0, y0, x1, y1, t, bowSign) {
+    const dx = x1 - x0;
+    const dy = y1 - y0;
+    const len = Math.hypot(dx, dy) || 1;
+    const bow = Math.min(28, len * 0.12) * bowSign;
+    const px = (-dy / len) * bow;
+    const py = (dx / len) * bow;
+    const cp1x = x0 + dx * 0.35 + px;
+    const cp1y = y0 + dy * 0.35 + py;
+    const cp2x = x0 + dx * 0.7 + px;
+    const cp2y = y0 + dy * 0.7 + py;
+    const u = 1 - t;
+
+    return {
+      x: u * u * u * x0 + 3 * u * u * t * cp1x + 3 * u * t * t * cp2x + t * t * t * x1,
+      y: u * u * u * y0 + 3 * u * u * t * cp1y + 3 * u * t * t * cp2y + t * t * t * y1
+    };
+  }
 
   class Packet {
     constructor(isBreach = false, speedMultiplier = 1) {
@@ -163,6 +212,7 @@ function initPipelineSimulation() {
 
       this.isBreach = isBreach;
       this.color = isBreach ? '#ef4444' : coords.agents[this.agentIdx].color;
+      this.bowSign = [-1, 0, 1][this.agentIdx] || 0;
       this.progress = 0;
       this.speed = (0.012 + Math.random() * 0.008) * speedMultiplier;
       this.size = isBreach ? 5.5 : 3.8;
@@ -178,47 +228,21 @@ function initPipelineSimulation() {
       let currentX, currentY;
 
       if (this.progress <= 0.5) {
-        // Leg 1: Agent to Center
-        const t = this.progress * 2;
-        // Cubic bezier from startX to midX
-        const cp1x = this.startX + (this.midX - this.startX) * 0.5;
-        const cp1y = this.startY;
-        const cp2x = this.startX + (this.midX - this.startX) * 0.7;
-        const cp2y = this.midY;
-
-        currentX = Math.pow(1 - t, 3) * this.startX +
-                   3 * Math.pow(1 - t, 2) * t * cp1x +
-                   3 * (1 - t) * Math.pow(t, 2) * cp2x +
-                   Math.pow(t, 3) * this.midX;
-
-        currentY = Math.pow(1 - t, 3) * this.startY +
-                   3 * Math.pow(1 - t, 2) * t * cp1y +
-                   3 * (1 - t) * Math.pow(t, 2) * cp2y +
-                   Math.pow(t, 3) * this.midY;
+        const point = pointOnCurve(
+          this.startX, this.startY, this.midX, this.midY, this.progress * 2, this.bowSign
+        );
+        currentX = point.x;
+        currentY = point.y;
+      } else if (this.isBreach) {
+        this.blocked = true;
+        currentX = this.midX + (Math.random() - 0.5) * 12;
+        currentY = this.midY + (Math.random() - 0.5) * 12;
       } else {
-        // Leg 2: Center to System (or blocked)
-        if (this.isBreach) {
-          // Blocked at center! Fade out and dissipate
-          this.blocked = true;
-          currentX = this.midX + (Math.random() - 0.5) * 12;
-          currentY = this.midY + (Math.random() - 0.5) * 12;
-        } else {
-          const t = (this.progress - 0.5) * 2;
-          const cp1x = this.midX + (this.endX - this.midX) * 0.3;
-          const cp1y = this.midY;
-          const cp2x = this.midX + (this.endX - this.midX) * 0.5;
-          const cp2y = this.endY;
-
-          currentX = Math.pow(1 - t, 3) * this.midX +
-                     3 * Math.pow(1 - t, 2) * t * cp1x +
-                     3 * (1 - t) * Math.pow(t, 2) * cp2x +
-                     Math.pow(t, 3) * this.endX;
-
-          currentY = Math.pow(1 - t, 3) * this.midY +
-                     3 * Math.pow(1 - t, 2) * t * cp1y +
-                     3 * (1 - t) * Math.pow(t, 2) * cp2y +
-                     Math.pow(t, 3) * this.endY;
-        }
+        const point = pointOnCurve(
+          this.midX, this.midY, this.endX, this.endY, (this.progress - 0.5) * 2, this.bowSign
+        );
+        currentX = point.x;
+        currentY = point.y;
       }
 
       this.trail.push({ x: currentX, y: currentY });
