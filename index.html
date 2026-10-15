@@ -373,7 +373,7 @@
           <div class="text-center mb-8">
             <div class="inline-flex items-center gap-2 bg-[#10b981]/10 border border-[#10b981]/35 text-[#d1fae5] rounded-full py-1.5 px-3.5 text-[12px] font-medium">
               <span class="w-1.5 h-1.5 rounded-full bg-[#10b981] shadow-[0_0_8px_#10b981]"></span>
-              Onboarding, early access
+              Early access
             </div>
             <h2 class="font-display text-[clamp(32px,5vw,56px)] leading-[1.08] text-white mt-5">
               <span class="block">Join The</span>
@@ -384,23 +384,11 @@
             </p>
           </div>
           <div class="bg-[#0c0d14]/85 border border-white/10 rounded-[28px] p-6 md:p-8 backdrop-blur-2xl">
-            <div class="flex flex-wrap items-center justify-between gap-3 text-[13px] text-[#c4c2c3] mb-6">
-              <div class="flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-[#38bdf8] shadow-[0_0_8px_#38bdf8]"></span>
-                <span>Current Queue:</span>
-                <strong id="live-queue" class="text-white font-semibold">3,843</strong>
-                <span>developers</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <i class="fa-regular fa-clock"></i>
-                <span>Next Invites: Tomorrow, 10:00 UTC</span>
-              </div>
-            </div>
             <form id="access-form" class="flex flex-col gap-4">
               <label for="wl-email" class="text-[13px] text-[#c4c2c3]">Work Email</label>
               <div class="flex items-center gap-3 bg-white/5 border border-white/15 rounded-full px-4">
                 <i class="fa-regular fa-envelope text-[#8e8e8e]"></i>
-                <input id="wl-email" type="email" required placeholder="ada@company.com" autocomplete="email" class="flex-1 bg-transparent py-[13px] text-[14.5px] text-white outline-none placeholder:text-[#71717a]">
+                <input id="wl-email" type="email" name="email" required placeholder="ada@company.com" autocomplete="email" class="flex-1 bg-transparent py-[13px] text-[14.5px] text-white outline-none placeholder:text-[#71717a]">
               </div>
               <button type="submit" class="w-full bg-white text-black rounded-full py-[13px] font-semibold text-[14.5px] inline-flex items-center justify-center gap-2 hover:bg-[#f4f4f5] transition-all">
                 <span class="btn-label">Request Priority Access</span>
@@ -408,9 +396,10 @@
               </button>
               <p class="flex items-start gap-2 text-[12px] text-[#8e8e8e] leading-relaxed">
                 <i class="fa-solid fa-shield-halved mt-0.5"></i>
-                <span>Zero spam. PAYG credits never expire. Instant API key dispatched upon batch invite.</span>
+                <span>Zero spam. PAYG credits never expire.</span>
               </p>
               <p id="form-success-msg" class="form-success">You're on the list. The next invite goes to that email.</p>
+              <p id="form-error-msg" class="form-error" role="alert"></p>
             </form>
           </div>
         </section>

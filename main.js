@@ -498,23 +498,63 @@ function initNavLinks() {
 function initAccessForm() {
   const form = document.getElementById('access-form');
   const successMsg = document.getElementById('form-success-msg');
+  const errorMsg = document.getElementById('form-error-msg');
   if (!form || !successMsg) return;
 
-  form.addEventListener('submit', (e) => {
+  const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xrpbjabw';
+
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const btn = form.querySelector('button[type="submit"]');
     const label = form.querySelector('.btn-label');
-    const input = form.querySelector('input');
+    const input = form.querySelector('input[type="email"]');
+    if (!input) return;
+
+    const originalLabel = label ? label.textContent : 'Request Priority Access';
     if (btn) {
       btn.disabled = true;
       btn.style.opacity = '0.7';
     }
     if (label) label.textContent = 'Submitting...';
+    successMsg.style.display = 'none';
+    if (errorMsg) errorMsg.style.display = 'none';
 
-    setTimeout(() => {
-      if (input) input.value = '';
+    try {
+      const response = await fetch(FORMSPREE_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: input.value,
+          _subject: 'Priority waitlist',
+        }),
+      });
+
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        const message = Array.isArray(data.errors) && data.errors.length
+          ? data.errors.map((err) => err.message).filter(Boolean).join(' ')
+          : '';
+        throw new Error(message || 'Could not join the waitlist. Try again.');
+      }
+
+      input.value = '';
       if (label) label.textContent = 'Received';
       successMsg.style.display = 'block';
-    }, 450);
+    } catch (err) {
+      if (label) label.textContent = originalLabel;
+      if (btn) {
+        btn.disabled = false;
+        btn.style.opacity = '';
+      }
+      if (errorMsg) {
+        errorMsg.textContent = err instanceof Error && err.message
+          ? err.message
+          : 'Could not join the waitlist. Try again.';
+        errorMsg.style.display = 'block';
+      }
+    }
   });
 }
