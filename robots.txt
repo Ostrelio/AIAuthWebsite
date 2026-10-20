@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://ostrelio.com/sitemap.xml
