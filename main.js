@@ -1,12 +1,31 @@
 /**
  * Ostrelio — Runtime Authorization for AI Agents
- * Interactive Living Engine & High-Level Page Controller
+ * Page interactions
  */
 
+const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+let motionPaused = motionPreference.matches;
+
+function initMotionPreference() {
+  const video = document.getElementById('background-video');
+
+  const setPaused = (paused) => {
+    motionPaused = paused;
+    document.documentElement.dataset.motionPaused = String(paused);
+    if (video) {
+      if (paused) video.pause();
+      else video.play().catch(() => {});
+    }
+  };
+
+  motionPreference.addEventListener('change', (event) => setPaused(event.matches));
+  setPaused(motionPaused);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+  initMotionPreference();
   initStatsCountUp();
-  initPipelineSimulation();
-  initNavLinks();
+  initPipelineAnimation();
   initAccessForm();
 });
 
@@ -90,26 +109,19 @@ function initStatsCountUp() {
   observer.observe(statsGrid);
 }
 
-/**
- * 2) Interactive Living Runtime Pipeline Simulation
- */
-function initPipelineSimulation() {
+function initPipelineAnimation() {
   const canvas = document.getElementById('pipeline-canvas');
   const container = document.querySelector('.pipeline-stage');
-  const irisCore = document.getElementById('iris-core');
   const irisLatency = document.getElementById('iris-latency');
   const irisOps = document.getElementById('iris-ops');
-  const irisStatusText = document.getElementById('iris-status-text');
   const avgLatencyEl = document.getElementById('live-avg-latency');
   const feedList = document.getElementById('stream-feed-list');
 
-  const btnStream = document.getElementById('btn-mode-stream');
-  const btnBreach = document.getElementById('btn-mode-breach');
-  const btnSwarm = document.getElementById('btn-mode-swarm');
 
   if (!canvas || !container) return;
 
   const ctx = canvas.getContext('2d');
+  if (!ctx) return;
   let width = 0;
   let height = 0;
   let particles = [];
@@ -131,8 +143,7 @@ function initPipelineSimulation() {
   window.addEventListener('resize', resizeCanvas);
 
   // Particles system
-  let currentMode = 'stream'; // 'stream' | 'breach' | 'swarm'
-  let spawnInterval = 180;
+  const spawnInterval = 180;
   let lastSpawn = 0;
 
   const AGENT_COLORS = ['#38bdf8', '#a855f7', '#10b981'];
@@ -198,7 +209,7 @@ function initPipelineSimulation() {
   }
 
   class Packet {
-    constructor(isBreach = false, speedMultiplier = 1) {
+    constructor() {
       const coords = getCoordinates();
       this.agentIdx = Math.floor(Math.random() * coords.agents.length);
       this.systemIdx = Math.floor(Math.random() * coords.systems.length);
@@ -210,14 +221,12 @@ function initPipelineSimulation() {
       this.endX = coords.systems[this.systemIdx].x;
       this.endY = coords.systems[this.systemIdx].y;
 
-      this.isBreach = isBreach;
-      this.color = isBreach ? '#ef4444' : coords.agents[this.agentIdx].color;
+      this.color = coords.agents[this.agentIdx].color;
       this.bowSign = [-1, 0, 1][this.agentIdx] || 0;
       this.progress = 0;
-      this.speed = (0.012 + Math.random() * 0.008) * speedMultiplier;
-      this.size = isBreach ? 5.5 : 3.8;
+      this.speed = 0.012 + Math.random() * 0.008;
+      this.size = 3.8;
       this.evaluated = false;
-      this.blocked = false;
       this.trail = [];
     }
 
@@ -233,10 +242,6 @@ function initPipelineSimulation() {
         );
         currentX = point.x;
         currentY = point.y;
-      } else if (this.isBreach) {
-        this.blocked = true;
-        currentX = this.midX + (Math.random() - 0.5) * 12;
-        currentY = this.midY + (Math.random() - 0.5) * 12;
       } else {
         const point = pointOnCurve(
           this.midX, this.midY, this.endX, this.endY, (this.progress - 0.5) * 2, this.bowSign
@@ -251,7 +256,7 @@ function initPipelineSimulation() {
       // Check evaluation at center gate
       if (this.progress >= 0.5 && !this.evaluated) {
         this.evaluated = true;
-        onPacketEvaluated(this.isBreach, this.agentIdx);
+        onPacketEvaluated();
       }
 
       this.currentX = currentX;
@@ -286,16 +291,7 @@ function initPipelineSimulation() {
     }
   }
 
-  function onPacketEvaluated(isBreach, agentIdx) {
-    if (isBreach) {
-      if (irisCore) irisCore.classList.add('breach-alert');
-      if (irisStatusText) irisStatusText.textContent = 'BLOCKED';
-      setTimeout(() => {
-        if (irisCore) irisCore.classList.remove('breach-alert');
-        if (irisStatusText) irisStatusText.textContent = '';
-      }, 1600);
-    }
-
+  function onPacketEvaluated() {
     // Dynamic latency fluctuations between 2.4ms and 4.2ms (always under 7ms)
     const ms = (2.4 + Math.random() * 1.8).toFixed(1);
     if (irisLatency) irisLatency.textContent = `${ms} ms`;
@@ -308,78 +304,29 @@ function initPipelineSimulation() {
 
   // Animation Loop
   function animateLoop(timestamp) {
+    if (motionPaused) {
+      requestAnimationFrame(animateLoop);
+      return;
+    }
     ctx.clearRect(0, 0, width, height);
 
-    // Periodic spawning based on current mode
+    // Default traffic stream.
     if (timestamp - lastSpawn > spawnInterval) {
       lastSpawn = timestamp;
-      if (currentMode === 'breach') {
-        particles.push(new Packet(true, 1.2));
-        currentMode = 'stream'; // Reset mode after launching breach test
-        setTimeout(() => {
-          btnStream.classList.add('active');
-          btnBreach.classList.remove('active');
-        }, 1200);
-      } else if (currentMode === 'swarm') {
-        // Spawn cluster
-        for (let i = 0; i < 4; i++) {
-          particles.push(new Packet(false, 1.4));
-        }
-      } else {
-        particles.push(new Packet(false, 1));
-      }
+      particles.push(new Packet());
     }
 
     // Update & draw particles
     particles = particles.filter(p => {
       p.update();
       p.draw(ctx);
-      if (p.isBreach && p.progress >= 0.58) return false;
       return p.progress < 1;
     });
 
     requestAnimationFrame(animateLoop);
   }
 
-  requestAnimationFrame(animateLoop);
-
-  // Mode Buttons click handlers
-  if (btnStream) {
-    btnStream.addEventListener('click', () => {
-      currentMode = 'stream';
-      spawnInterval = 180;
-      btnStream.classList.add('active');
-      btnBreach.classList.remove('active');
-      btnSwarm.classList.remove('active');
-      addLogEntry('Normal traffic. Decisions keep moving.', 'AUTHORIZED', '< 2.9ms');
-      scheduleLog();
-    });
-  }
-
-  if (btnBreach) {
-    btnBreach.addEventListener('click', () => {
-      currentMode = 'breach';
-      btnBreach.classList.add('active');
-      btnStream.classList.remove('active');
-      btnSwarm.classList.remove('active');
-      addLogEntry('Denied call held at the gate.', 'BLOCKED', '< 2.1ms', true);
-      scheduleLog();
-    });
-  }
-
-  if (btnSwarm) {
-    btnSwarm.addEventListener('click', () => {
-      currentMode = 'swarm';
-      spawnInterval = 70;
-      btnSwarm.classList.add('active');
-      btnStream.classList.remove('active');
-      btnBreach.classList.remove('active');
-      addLogEntry('Many agents at once. Still under 7ms.', 'AUTHORIZED', '< 3.2ms');
-      scheduleLog();
-    });
-  }
-
-  // Live Micro-Telemetry Event Generator
+  // Illustrative decision feed.
   const sampleEvents = [
     { actor: '6.1 Sol', action: 'stripe.refunds.create($140.00)', badge: 'AUTHORIZED', latency: '< 2.9ms' },
     { actor: 'Claude Sonnet 5', action: 'aws.s3.get_object(billing_report)', badge: 'AUTHORIZED', latency: '< 3.1ms' },
@@ -435,12 +382,6 @@ function initPipelineSimulation() {
     addLogEntry(`${ev.actor}: ${ev.action}`, ev.badge, ev.latency, ev.isBreach);
   });
 
-  // Normal traffic ticks about every 2.2s. Many agents is the only mode
-  // that accelerates the log.
-  let logTimer = null;
-  const LOG_NORMAL_MS = 2200;
-  const LOG_SWARM_MS = 280;
-
   function pushSampleEvent() {
     const ev = sampleEvents[eventIdx % sampleEvents.length];
     eventIdx++;
@@ -448,48 +389,14 @@ function initPipelineSimulation() {
   }
 
   function scheduleLog() {
-    clearTimeout(logTimer);
-    const delay = currentMode === 'swarm' ? LOG_SWARM_MS : LOG_NORMAL_MS;
-    logTimer = setTimeout(() => {
-      pushSampleEvent();
+    setTimeout(() => {
+      if (!motionPaused) pushSampleEvent();
       scheduleLog();
-    }, delay);
+    }, 2200);
   }
 
+  requestAnimationFrame(animateLoop);
   scheduleLog();
-}
-
-/**
- * 3) Navigation Active Link Highlighting
- */
-function initNavLinks() {
-  const sections = document.querySelectorAll('section[id]');
-  const desktopLinks = document.querySelectorAll('.sd-unified-nav .sd-nav-link');
-
-  const updateActive = () => {
-    const scrollY = window.pageYOffset;
-    let currentId = '';
-
-    sections.forEach(section => {
-      const top = section.offsetTop - 160;
-      const height = section.offsetHeight;
-      if (scrollY >= top && scrollY < top + height) {
-        currentId = section.getAttribute('id');
-      }
-    });
-
-    if (currentId) {
-      desktopLinks.forEach(link => {
-        if (link.getAttribute('href') === `#${currentId}`) {
-          link.classList.add('active');
-        } else {
-          link.classList.remove('active');
-        }
-      });
-    }
-  };
-
-  window.addEventListener('scroll', updateActive);
 }
 
 /**

@@ -38,13 +38,14 @@
     ]
   }
   </script>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="/assets/logo.webp" type="image/webp">
+  <link rel="stylesheet" href="/assets/utilities.css?v=f6e6445bdeec">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
   <link href="https://db.onlinewebfonts.com/c/8cb707a9b8a73f8a7403336b861c3074?family=BubbledotICG-FinePos" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=b06fd91955e9">
   <style>
     @font-face {
       font-family: "Geist Pixel Circle";
@@ -97,31 +98,21 @@
       border: 1px solid rgba(255, 255, 255, 0.09);
       backdrop-filter: blur(20px);
     }
-    .sd-header-wrapper { position: fixed; top: 0; left: 0; right: 0; z-index: 50; padding: 18px 24px; display: flex; justify-content: center; pointer-events: none; font-family: Inter, "Segoe UI", system-ui, sans-serif; }
-    .sd-unified-header { pointer-events: auto; display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 820px; background: rgba(14, 15, 20, 0.8); backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.12); border-radius: 9999px; padding: 6px 10px 6px 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 20px rgba(56,189,248,0.08); }
-    .sd-brand-left { display: flex; align-items: center; gap: 10px; text-decoration: none; color: #fff; }
-    .sd-brand-icon-wrap { width: 38px; height: 38px; border-radius: 50%; background: #fff; display: grid; place-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.25); overflow: hidden; }
-    .sd-brand-icon-wrap img { width: 72%; height: 72%; object-fit: contain; display: block; }
-    .sd-brand-name { font-weight: 700; font-size: 14.5px; letter-spacing: 0.12em; color: #fff; }
-    .sd-unified-nav { display: flex; align-items: center; gap: 18px; }
-    .sd-nav-link { font-weight: 500; font-size: 13.5px; color: #a1a1aa; text-decoration: none; position: relative; padding: 6px 4px; }
-    .sd-nav-link.active { color: #fff; font-weight: 600; }
-    .sd-nav-link.active::after { content: ""; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 14px; height: 2px; border-radius: 2px; background: #38bdf8; box-shadow: 0 0 8px #38bdf8; }
-    .sd-header-access { background: #fff; color: #000; font-size: 13px; font-weight: 600; padding: 8px 18px; border-radius: 9999px; text-decoration: none; white-space: nowrap; }
     .sd-footer { width: 100%; max-width: 1040px; margin: 40px auto 0; padding: 30px 24px 40px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; font-family: Inter, "Segoe UI", system-ui, sans-serif; color: #fff; box-sizing: border-box; }
     .sd-footer-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: #fff; font-weight: 700; font-size: 14px; letter-spacing: 0.1em; }
     .sd-footer-icon { width: 28px; height: 28px; border-radius: 50%; background: #fff; display: grid; place-items: center; overflow: hidden; }
     .sd-footer-icon img { width: 72%; height: 72%; object-fit: contain; display: block; }
     .sd-footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
-    .sd-footer-links a { color: #71717a; text-decoration: none; font-size: 13px; }
+    .sd-footer-links a { color: #a1a1aa; text-decoration: none; font-size: 13px; }
     .sd-footer-links a:hover { color: #fff; }
-    .sd-footer-copy { font-size: 12px; color: #71717a; letter-spacing: 0.02em; }
+    .sd-footer-copy { font-size: 12px; color: #a1a1aa; letter-spacing: 0.02em; }
   </style>
 </head>
 <body>
+  <a class="skip-link" href="#waitlist">Skip to access request</a>
   <div class="min-h-screen relative">
     <div class="fixed inset-0 z-0 pointer-events-none">
-      <video class="absolute inset-0 w-full h-full object-cover opacity-80" autoplay muted loop playsinline>
+      <video id="background-video" aria-hidden="true" class="hero-video absolute inset-0 w-full h-full object-cover" autoplay muted loop playsinline>
         <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260809_012548_ef22562c-c0ae-4816-ad9d-f8922af4e6a7.mp4" type="video/mp4">
       </video>
       <div class="absolute inset-0 bg-overlay"></div>
@@ -132,58 +123,30 @@
     <div class="ambient-flow flow-emerald" aria-hidden="true"></div>
 
     <div class="relative z-10">
-      <div class="sd-header-wrapper">
-        <header class="sd-unified-header">
-          <a href="#overview" class="sd-brand-left" aria-label="Ostrelio Brand Home">
-            <span class="sd-brand-icon-wrap">
-              <img src="assets/logo.webp" alt="" width="52" height="52">
-            </span>
-            <span class="sd-brand-name">OSTRELIO</span>
-          </a>
-          <nav class="sd-unified-nav" aria-label="Desktop Navigation">
-            <a href="#overview" class="sd-nav-link active">Overview</a>
-            <a href="#capability" class="sd-nav-link">Capability</a>
-            <a href="#platform" class="sd-nav-link">Runtime Engine</a>
-            <a href="#waitlist" class="sd-nav-link">Access</a>
-          </nav>
-          <a href="#waitlist" class="sd-header-access">Request access</a>
-        </header>
-      </div>
-
       <main>
-        <section id="overview" class="min-h-screen flex flex-col items-center justify-center pt-32 pb-16 px-4 md:px-8">
-          <div class="max-w-[920px] w-full flex flex-col items-center text-center">
+        <section id="overview" class="hero">
+          <div class="hero-content">
+            <h1 class="hero-wordmark">OSTRELIO</h1>
             <div class="flex flex-wrap justify-center items-center gap-3 mb-8">
-              <div class="flex items-center gap-2 bg-[#16161c]/85 border border-white/16 rounded-full py-1 pr-4 pl-1.5 backdrop-blur-md shadow-lg">
-                <div class="flex -space-x-2">
+              <div class="enterprise-badge flex items-center gap-2 bg-[#16161c]/85 border border-white/16 rounded-full py-1 pr-4 pl-1.5 backdrop-blur-md shadow-lg">
+                <div class="flex -space-x-2" role="img" aria-label="Microsoft, Amazon and Google">
                   <div class="w-8 h-8 rounded-full bg-[#28282a] border border-white/40 p-1 flex items-center justify-center">
-                    <div class="w-full h-full rounded-full bg-white flex items-center justify-center text-[11px] text-[#111]"><i class="fa-brands fa-microsoft"></i></div>
+                    <div class="w-full h-full rounded-full bg-white flex items-center justify-center text-[11px] text-[#111]"><i aria-hidden="true" class="fa-brands fa-microsoft"></i></div>
                   </div>
                   <div class="w-8 h-8 rounded-full bg-[#28282a] border border-white/40 p-1 flex items-center justify-center">
-                    <div class="w-full h-full rounded-full bg-white flex items-center justify-center text-[11px] text-[#111]"><i class="fa-brands fa-amazon"></i></div>
+                    <div class="w-full h-full rounded-full bg-white flex items-center justify-center text-[11px] text-[#111]"><i aria-hidden="true" class="fa-brands fa-amazon"></i></div>
                   </div>
                   <div class="w-8 h-8 rounded-full bg-[#28282a] border border-white/40 p-1 flex items-center justify-center">
-                    <div class="w-full h-full rounded-full bg-white flex items-center justify-center text-[11px] text-[#111]"><i class="fa-brands fa-google"></i></div>
+                    <div class="w-full h-full rounded-full bg-white flex items-center justify-center text-[11px] text-[#111]"><i aria-hidden="true" class="fa-brands fa-google"></i></div>
                   </div>
                 </div>
                 <span class="text-[#d4d4d8] text-[12.5px] font-medium tracking-tight whitespace-nowrap">Available with 20,000+ enterprises</span>
               </div>
-              <!-- Temporarily hidden AICPA SOC 2 Type II claim
-              <div class="flex items-center gap-2.5 bg-[#0e121c]/85 border border-[#00a3e0]/45 rounded-full py-1 pr-4 pl-1.5 backdrop-blur-md shadow-[0_0_20px_rgba(0,163,224,0.22)]">
-                <img src="assets/soc2.png" alt="AICPA SOC 2 Type II Certified" class="w-[30px] h-[30px] rounded-full object-contain bg-white/10 p-[1px]">
-                <span class="text-[#e0f2fe] text-xs font-bold tracking-wider">AICPA SOC 2 TYPE II</span>
-              </div>
-              -->
             </div>
-
-            <h1 class="font-display text-[clamp(32px,6.2vw,78px)] leading-[1.15] tracking-[0.01em] text-white flex flex-col">
-              <span class="sr-only">Ostrelio</span>
-              <span>AUTHORIZE EVERY</span>
-              <span>AGENT ACTION</span>
-            </h1>
+            <h2 class="hero-headline font-display">AUTHORIZE EVERY<br>AGENT ACTION</h2>
 
             <p class="text-[#a1a1aa] text-[clamp(15px,1.8vw,19px)] leading-relaxed max-w-[660px] mt-6 tracking-tight">
-              The invisible runtime authorization layer for autonomous software. Intercept and evaluate agent actions in real time, sustaining 40,000 decisions per second in under 7ms with deterministic precision.
+              Check consequential agent actions before they execute. Give autonomous software the freedom to work, with the control your business needs.
             </p>
 
             <div class="mt-8">
@@ -193,7 +156,7 @@
             </div>
           </div>
 
-          <div class="stats-grid w-full max-w-[920px] mt-12 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+          <div class="stats-grid w-full grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
             <div class="text-center">
               <div class="font-display text-[clamp(22px,3vw,33px)] text-white leading-none">&lt;</div>
               <div class="stat-value text-white text-[clamp(18px,2.2vw,26px)] font-medium tracking-[-0.025em] tabular-nums mt-1.5" data-target="7" data-decimals="0" data-suffix="ms">7ms</div>
@@ -217,14 +180,10 @@
           </div>
         </section>
 
-        <div class="w-full flex justify-center h-20 relative overflow-hidden" aria-hidden="true">
-          <div class="flow-beam w-[2px] h-full bg-gradient-to-b from-[#38bdf8]/60 to-[#a855f7]/60 shadow-[0_0_10px_rgba(56,189,248,0.5)]"></div>
-        </div>
-
-        <section id="capability" class="max-w-[1040px] mx-auto px-4 md:px-8 py-16 md:py-20">
+        <section id="capability" class="max-w-[1200px] mx-auto px-4 md:px-8 py-16 md:py-20">
           <div class="text-center max-w-[720px] mx-auto mb-12">
-            <div class="font-display text-[13px] text-[#38bdf8] tracking-[0.08em] mb-3">01 / THE CAPABILITY</div>
-            <h2 class="font-display text-[clamp(28px,4.4vw,46px)] font-extrabold tracking-tight leading-[1.15] mb-4">Permissions are static.<br>Agent behavior is not.</h2>
+            <div class="section-index text-[13px] text-[#38bdf8] tracking-[0.08em] mb-3">01 / THE CAPABILITY</div>
+            <h2 class="section-heading font-display">Permissions are static.<br>Agent behavior is not.</h2>
             <p class="text-[clamp(15px,1.8vw,17px)] text-[#a1a1aa] leading-relaxed">
               Identity establishes who the actor is. Ostrelio decides whether the act should happen now, quietly evaluating context, cumulative sequence, and enterprise intent in under 7 milliseconds.
             </p>
@@ -232,7 +191,7 @@
 
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="glass-card rounded-3xl p-8 relative overflow-hidden flex flex-col">
-              <div class="font-display text-base font-bold text-[#38bdf8] w-[50px] h-[50px] rounded-2xl bg-[#38bdf8]/10 border border-[#38bdf8]/30 flex items-center justify-center mb-5">&lt;7ms</div>
+              <div class="capability-mark">&lt;7ms</div>
               <h3 class="font-display text-xl font-bold text-white mb-3 tracking-tight">Pre-Execution Evaluation</h3>
               <p class="text-[14.5px] text-[#a1a1aa] leading-relaxed flex-1">
                 Intercepts consequential agent tool calls before network packets transmit or API keys execute. Zero blind execution windows.
@@ -240,7 +199,7 @@
               <div class="font-display text-xs text-[#38bdf8] mt-5 pt-3.5 border-t border-white/10">Evaluated in under 7ms</div>
             </div>
             <div class="glass-card rounded-3xl p-8 relative overflow-hidden flex flex-col">
-              <div class="font-display text-base font-bold text-[#38bdf8] w-[50px] h-[50px] rounded-2xl bg-[#38bdf8]/10 border border-[#38bdf8]/30 flex items-center justify-center mb-5">40k/s</div>
+              <div class="capability-mark">40k/s</div>
               <h3 class="font-display text-xl font-bold text-white mb-3 tracking-tight">40,000+ Ops/Sec</h3>
               <p class="text-[14.5px] text-[#a1a1aa] leading-relaxed flex-1">
                 Massive concurrent throughput engineered for enterprise swarms. Scale thousands of autonomous agents with zero latency friction.
@@ -248,11 +207,8 @@
               <div class="font-display text-xs text-[#38bdf8] mt-5 pt-3.5 border-t border-white/10">Hyperscale Parallel Kernel</div>
             </div>
             <div class="glass-card rounded-3xl p-8 relative overflow-hidden flex flex-col">
-              <div class="font-display text-base font-bold text-[#38bdf8] w-[50px] h-[50px] rounded-2xl bg-[#38bdf8]/10 border border-[#38bdf8]/30 flex items-center justify-center mb-5">
-                if/then
-                <!-- Temporarily hidden SOC 2 logo
-                <img src="assets/soc2.png" alt="SOC 2" class="w-8 h-8 object-contain">
-                -->
+              <div class="capability-mark">
+                if / then
               </div>
               <h3 class="font-display text-xl font-bold text-white mb-3 tracking-tight">Deterministic Control</h3>
               <p class="text-[14.5px] text-[#a1a1aa] leading-relaxed flex-1">
@@ -264,35 +220,13 @@
           </div>
         </section>
 
-        <div class="w-full flex justify-center h-20 relative overflow-hidden" aria-hidden="true">
-          <div class="flow-beam w-[2px] h-full bg-gradient-to-b from-[#38bdf8]/60 to-[#a855f7]/60 shadow-[0_0_10px_rgba(56,189,248,0.5)]"></div>
-        </div>
-
-        <section id="platform" class="max-w-[1040px] mx-auto px-4 md:px-8 py-16 md:py-20">
+        <section id="platform" class="max-w-[1200px] mx-auto px-4 md:px-8 py-16 md:py-20">
           <div class="text-center max-w-[720px] mx-auto mb-12">
-            <div class="font-display text-[13px] text-[#38bdf8] tracking-[0.08em] mb-3">02 / RUNTIME ENGINE</div>
-            <h2 class="font-display text-[clamp(28px,4.4vw,46px)] font-extrabold tracking-tight leading-[1.15] mb-4">One Decision Plane. <br>Pure Magic.</h2>
+            <div class="section-index text-[13px] text-[#38bdf8] tracking-[0.08em] mb-3">02 / RUNTIME ENGINE</div>
+            <h2 class="section-heading font-display">Every action.<br>A clear decision.</h2>
             <p class="text-[clamp(15px,1.8vw,17px)] text-[#a1a1aa] leading-relaxed">
-              Watch autonomous agent tool calls stream through Ostrelio's neural gate. Real-time sub-7ms evaluation, deterministic filtering, and zero leaks.
+              Agents propose an action. Ostrelio checks the context and policy before that action reaches your systems.
             </p>
-          </div>
-
-          <div class="sim-toolbar bg-[#12131c]/80 border border-white/10 rounded-[18px] p-2.5 px-4 mb-5 backdrop-blur-md flex flex-wrap items-center justify-between gap-3">
-            <div class="font-display text-[11px] text-[#71717a] tracking-widest">INTERACTIVE SIMULATION:</div>
-            <div class="sim-modes">
-              <button id="btn-mode-stream" type="button" class="mode-btn active bg-white/5 border border-white/10 text-[#d4d4d8] rounded-full py-[7px] px-[15px] text-[12.5px] font-medium flex items-center gap-2">
-                <span class="w-[7px] h-[7px] rounded-full bg-[#38bdf8] shadow-[0_0_8px_#38bdf8]"></span>
-                Normal traffic
-              </button>
-              <button id="btn-mode-breach" type="button" class="mode-btn bg-white/5 border border-white/10 text-[#d4d4d8] rounded-full py-[7px] px-[15px] text-[12.5px] font-medium flex items-center gap-2">
-                <span class="w-[7px] h-[7px] rounded-full bg-[#ef4444] shadow-[0_0_8px_#ef4444]"></span>
-                Denied call
-              </button>
-              <button id="btn-mode-swarm" type="button" class="mode-btn bg-white/5 border border-white/10 text-[#d4d4d8] rounded-full py-[7px] px-[15px] text-[12.5px] font-medium flex items-center gap-2">
-                <span class="w-[7px] h-[7px] rounded-full bg-[#a855f7] shadow-[0_0_8px_#a855f7]"></span>
-                Many agents
-              </button>
-            </div>
           </div>
 
           <div class="stream-pipeline-box bg-[#0a0b10]/85 border border-white/10 rounded-[28px] p-8 pb-5 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
@@ -300,34 +234,34 @@
               <canvas id="pipeline-canvas" class="pipeline-canvas" aria-hidden="true"></canvas>
               <div class="pipeline-grid grid grid-cols-1 md:grid-cols-[1fr_1.2fr_1fr] gap-6 md:gap-8 items-center min-h-[280px]">
                 <div class="flex flex-col gap-3">
-                  <div class="font-display text-[10.5px] tracking-widest text-[#71717a] uppercase mb-1">AUTONOMOUS AGENTS</div>
+                  <div class="font-display text-[10.5px] tracking-widest text-[#a1a1aa] uppercase mb-1">AUTONOMOUS AGENTS</div>
                   <div class="bg-[#14161e]/85 border border-white/10 rounded-2xl p-3 px-3.5 flex items-center gap-3" data-pipeline-node="agent">
                     <div class="w-[34px] h-[34px] rounded-lg bg-white/5 flex items-center justify-center text-sm shrink-0">
-                      <i class="fa-solid fa-brain text-[#38bdf8]"></i>
+                      <i aria-hidden="true" class="fa-solid fa-brain text-[#38bdf8]"></i>
                     </div>
                     <div class="flex-1 min-w-0">
                       <div class="text-[13.5px] font-semibold text-white">6.1 Sol</div>
-                      <div class="text-[11px] text-[#71717a] truncate">Drafting refund batch</div>
+                      <div class="text-[11px] text-[#a1a1aa] truncate">Drafting refund batch</div>
                     </div>
                     <span class="w-2 h-2 rounded-full bg-[#38bdf8] shadow-[0_0_10px_#38bdf8] shrink-0"></span>
                   </div>
                   <div class="bg-[#14161e]/85 border border-white/10 rounded-2xl p-3 px-3.5 flex items-center gap-3" data-pipeline-node="agent">
                     <div class="w-[34px] h-[34px] rounded-lg bg-white/5 flex items-center justify-center text-sm shrink-0">
-                      <i class="fa-solid fa-bolt text-[#a855f7]"></i>
+                      <i aria-hidden="true" class="fa-solid fa-bolt text-[#a855f7]"></i>
                     </div>
                     <div class="flex-1 min-w-0">
                       <div class="text-[13.5px] font-semibold text-white">Claude Sonnet 5</div>
-                      <div class="text-[11px] text-[#71717a] truncate">Reindexing customer data</div>
+                      <div class="text-[11px] text-[#a1a1aa] truncate">Reindexing customer data</div>
                     </div>
                     <span class="w-2 h-2 rounded-full bg-[#a855f7] shadow-[0_0_10px_#a855f7] shrink-0"></span>
                   </div>
                   <div class="bg-[#14161e]/85 border border-white/10 rounded-2xl p-3 px-3.5 flex items-center gap-3" data-pipeline-node="agent">
                     <div class="w-[34px] h-[34px] rounded-lg bg-white/5 flex items-center justify-center text-sm shrink-0">
-                      <i class="fa-solid fa-robot text-[#10b981]"></i>
+                      <i aria-hidden="true" class="fa-solid fa-robot text-[#10b981]"></i>
                     </div>
                     <div class="flex-1 min-w-0">
                       <div class="text-[13.5px] font-semibold text-white">Grok 4.5</div>
-                      <div class="text-[11px] text-[#71717a] truncate">Syncing payroll API</div>
+                      <div class="text-[11px] text-[#a1a1aa] truncate">Syncing payroll API</div>
                     </div>
                     <span class="w-2 h-2 rounded-full bg-[#10b981] shadow-[0_0_10px_#10b981] shrink-0"></span>
                   </div>
@@ -345,11 +279,11 @@
                       <div class="font-display text-[11px] font-bold tracking-wider text-white mb-[3px]">OSTRELIO GATE</div>
                       <div class="flex flex-col gap-[1px]">
                         <div class="flex items-center gap-1.5">
-                          <span class="text-[8px] text-[#71717a] tracking-wider">LATENCY</span>
+                          <span class="text-[8px] text-[#a1a1aa] tracking-wider">LATENCY</span>
                           <span id="iris-latency" class="font-display text-[10px] font-bold text-[#34d399] drop-shadow-[0_0_6px_rgba(52,211,153,0.5)]">2.9 ms</span>
                         </div>
                         <div class="flex items-center gap-1.5">
-                          <span class="text-[8px] text-[#71717a] tracking-wider">THROUGHPUT</span>
+                          <span class="text-[8px] text-[#a1a1aa] tracking-wider">THROUGHPUT</span>
                           <span id="iris-ops" class="font-display text-[10px] font-bold text-[#38bdf8] drop-shadow-[0_0_6px_rgba(56,189,248,0.5)]">39,420/s</span>
                         </div>
                       </div>
@@ -358,10 +292,10 @@
                 </div>
 
                 <div class="flex flex-col gap-3">
-                  <div class="font-display text-[10.5px] tracking-widest text-[#71717a] uppercase mb-1">ENTERPRISE INFRASTRUCTURE</div>
+                  <div class="font-display text-[10.5px] tracking-widest text-[#a1a1aa] uppercase mb-1">ENTERPRISE INFRASTRUCTURE</div>
                   <div class="bg-[#14161e]/85 border border-white/10 rounded-2xl p-3 px-3.5 flex items-center gap-3" data-pipeline-node="system">
                     <div class="w-[34px] h-[34px] rounded-lg bg-white/5 flex items-center justify-center text-[15px] shrink-0">
-                      <i class="fa-brands fa-stripe text-[#635bff]"></i>
+                      <i aria-hidden="true" class="fa-brands fa-stripe text-[#635bff]"></i>
                     </div>
                     <div class="flex-1 min-w-0">
                       <div class="text-[13.5px] font-semibold text-white">Stripe &amp; SWIFT</div>
@@ -371,7 +305,7 @@
                   </div>
                   <div class="bg-[#14161e]/85 border border-white/10 rounded-2xl p-3 px-3.5 flex items-center gap-3" data-pipeline-node="system">
                     <div class="w-[34px] h-[34px] rounded-lg bg-white/5 flex items-center justify-center text-[15px] shrink-0">
-                      <i class="fa-brands fa-aws text-[#ff9900]"></i>
+                      <i aria-hidden="true" class="fa-brands fa-aws text-[#ff9900]"></i>
                     </div>
                     <div class="flex-1 min-w-0">
                       <div class="text-[13.5px] font-semibold text-white">AWS &amp; Kubernetes</div>
@@ -381,7 +315,7 @@
                   </div>
                   <div class="bg-[#14161e]/85 border border-white/10 rounded-2xl p-3 px-3.5 flex items-center gap-3" data-pipeline-node="system">
                     <div class="w-[34px] h-[34px] rounded-lg bg-white/5 flex items-center justify-center text-[15px] shrink-0">
-                      <i class="fa-solid fa-database text-[#38bdf8]"></i>
+                      <i aria-hidden="true" class="fa-solid fa-database text-[#38bdf8]"></i>
                     </div>
                     <div class="flex-1 min-w-0">
                       <div class="text-[13.5px] font-semibold text-white">Postgres &amp; Snowflake</div>
@@ -397,25 +331,25 @@
               <div class="flex items-center justify-between pb-2.5 border-b border-white/5 mb-2.5 gap-3">
                 <div class="flex items-center gap-2">
                   <span class="w-[7px] h-[7px] rounded-full bg-[#10b981] shadow-[0_0_8px_#10b981]"></span>
-                  <span class="font-display text-[11px] tracking-widest text-[#e4e4e7]">LIVE DECISION LOG</span>
+                  <span class="font-display text-[11px] tracking-widest text-[#e4e4e7]">EXAMPLE DECISIONS</span>
                 </div>
-                <div class="text-[11px] text-[#71717a]">
+                <div class="text-[11px] text-[#a1a1aa]">
                   Average
                   <span id="live-avg-latency" class="font-display text-[#34d399] font-bold ml-1">&lt; 3.1ms</span>
                 </div>
               </div>
-              <div id="stream-feed-list" class="stream-feed-list" aria-live="polite"></div>
+              <div id="stream-feed-list" class="stream-feed-list" aria-live="off"></div>
             </div>
           </div>
         </section>
 
-        <section id="waitlist" class="max-w-[760px] mx-auto px-4 md:px-8 py-16">
+        <section id="waitlist" tabindex="-1" class="max-w-[960px] mx-auto px-4 md:px-8 py-16">
           <div class="text-center mb-8">
             <div class="inline-flex items-center gap-2 bg-[#10b981]/10 border border-[#10b981]/35 text-[#d1fae5] rounded-full py-1.5 px-3.5 text-[12px] font-medium">
               <span class="w-1.5 h-1.5 rounded-full bg-[#10b981] shadow-[0_0_8px_#10b981]"></span>
               Early access
             </div>
-            <h2 class="font-display text-[clamp(32px,5vw,56px)] leading-[1.08] text-white mt-5">
+            <h2 class="font-display text-[clamp(28px,8vw,80px)] leading-[1.08] text-white mt-5">
               <span class="block">Join The</span>
               <span class="block">Priority Waitlist</span>
             </h2>
@@ -423,22 +357,23 @@
               Get priority agent concurrency and custom optimizer controls.
             </p>
           </div>
-          <div class="bg-[#0c0d14]/85 border border-white/10 rounded-[28px] p-6 md:p-8 backdrop-blur-2xl">
+          <div class="max-w-[696px] mx-auto bg-[#0c0d14]/85 border border-white/10 rounded-[28px] p-6 md:p-8 backdrop-blur-2xl">
             <form id="access-form" class="flex flex-col gap-4">
               <label for="wl-email" class="text-[13px] text-[#c4c2c3]">Work Email</label>
               <div class="flex items-center gap-3 bg-white/5 border border-white/15 rounded-full px-4">
-                <i class="fa-regular fa-envelope text-[#8e8e8e]"></i>
-                <input id="wl-email" type="email" name="email" required placeholder="ada@company.com" autocomplete="email" class="flex-1 bg-transparent py-[13px] text-[14.5px] text-white outline-none placeholder:text-[#71717a]">
+                <i aria-hidden="true" class="fa-regular fa-envelope text-[#8e8e8e]"></i>
+                <input id="wl-email" type="email" name="email" required placeholder="ada@company.com" autocomplete="email" aria-describedby="access-privacy" class="flex-1 bg-transparent py-[13px] text-[14.5px] text-white outline-none placeholder:text-[#a1a1aa]">
               </div>
+              <p id="access-privacy" class="text-xs text-[#a1a1aa] leading-relaxed">We’ll use your email to respond to your access request. Read our <a class="privacy-link" href="/privacy/">Privacy Policy</a>.</p>
               <button type="submit" class="w-full bg-white text-black rounded-full py-[13px] font-semibold text-[14.5px] inline-flex items-center justify-center gap-2 hover:bg-[#f4f4f5] transition-all">
                 <span class="btn-label">Request Priority Access</span>
-                <i class="fa-solid fa-arrow-right"></i>
+                <i aria-hidden="true" class="fa-solid fa-arrow-right"></i>
               </button>
               <p class="flex items-start gap-2 text-[12px] text-[#8e8e8e] leading-relaxed">
-                <i class="fa-solid fa-shield-halved mt-0.5"></i>
+                <i aria-hidden="true" class="fa-solid fa-shield-halved mt-0.5"></i>
                 <span>Zero spam. PAYG credits never expire.</span>
               </p>
-              <p id="form-success-msg" class="form-success">You're on the list. The next invite goes to that email.</p>
+              <p id="form-success-msg" class="form-success" role="status" aria-atomic="true">You're on the list. The next invite goes to that email.</p>
               <p id="form-error-msg" class="form-error" role="alert"></p>
             </form>
           </div>
@@ -452,17 +387,16 @@
           </span>
           <span>OSTRELIO</span>
         </a>
-        <div class="sd-footer-links">
-          <a href="#overview">Overview</a>
-          <a href="#capability">Capability</a>
-          <a href="#platform">Runtime Engine</a>
-          <a href="#waitlist">Access</a>
-          <a href="mailto:rushilpunu@ostrelio.com">Contact</a>
-        </div>
+        <nav class="sd-footer-links" aria-label="Footer">
+          <a href="/privacy/">Privacy Policy</a>
+          <a href="/terms/">Terms &amp; Conditions</a>
+          <a href="/disclaimer/">Legal Disclaimer</a>
+          <a href="/disclaimer/#accessibility">Accessibility</a>
+        </nav>
         <div class="sd-footer-copy">© 2026 OSTRELIO. All rights reserved.</div>
       </footer>
     </div>
   </div>
-  <script type="module" src="./main.js"></script>
+  <script type="module" src="./main.js?v=fa893e7dbeb8"></script>
 </body>
 </html>

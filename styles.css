@@ -1,6 +1,80 @@
-/* Functional layer for the canvas design.
-   Layout and color live in index.html (Tailwind). This file covers
-   the runtime log, particle stage, and states the static export omitted. */
+/* Page composition; component utility styles live in index.html. */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 32px;
+}
+
+.hero {
+  max-width: 1440px;
+  min-height: 100svh;
+  margin: 0 auto;
+  padding: 56px 40px 48px;
+}
+
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.hero-wordmark {
+  margin: 0 0 56px;
+  font-family: "Geist Pixel Circle", monospace;
+  font-size: clamp(48px, 18.8vw, 270px);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.055em;
+}
+
+.section-index {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.hero-headline {
+  font-size: clamp(28px, 6.2vw, 78px);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+}
+
+.hero-video { opacity: 0.32; }
+
+.stats-grid {
+  max-width: 960px;
+  margin: 72px auto 0;
+  padding: 32px 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.section-heading {
+  font-family: var(--font-display);
+  margin-bottom: 24px;
+  font-size: clamp(32px, 4.3vw, 56px);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.045em;
+}
+
+.capability-mark {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  justify-content: center;
+  min-width: 64px;
+  min-height: 44px;
+  margin-bottom: 32px;
+  padding: 10px 14px;
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  border-radius: 12px;
+  background: rgba(56, 189, 248, 0.06);
+  color: #7dd3fc;
+  font: 500 14px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+  white-space: nowrap;
+}
 
 .pipeline-stage {
   position: relative;
@@ -19,23 +93,6 @@
 .pipeline-grid {
   position: relative;
   z-index: 2;
-}
-
-#iris-core.breach-alert {
-  border-color: #ef4444 !important;
-  box-shadow: 0 0 36px rgba(239, 68, 68, 0.55), inset 0 0 18px rgba(239, 68, 68, 0.25) !important;
-}
-
-.mode-btn {
-  cursor: pointer;
-  font-family: Inter, "Segoe UI", system-ui, sans-serif;
-}
-
-.mode-btn.active {
-  background: rgba(56, 189, 248, 0.15);
-  border-color: #38bdf8;
-  color: #ffffff;
-  box-shadow: 0 0 16px rgba(56, 189, 248, 0.3);
 }
 
 .stream-feed-list {
@@ -69,7 +126,7 @@
 }
 
 .feed-time {
-  color: #52525b;
+  color: #a1a1aa;
   font-size: 11px;
   flex-shrink: 0;
 }
@@ -102,20 +159,35 @@
   border: 1px solid rgba(239, 68, 68, 0.4);
 }
 
-.form-success {
+.form-success,
+.form-error {
   display: none;
   margin-top: 12px;
-  color: #34d399;
   font-size: 13px;
   text-align: center;
 }
 
-.form-error {
-  display: none;
-  margin-top: 12px;
-  color: #f87171;
-  font-size: 13px;
-  text-align: center;
+.form-success { color: #34d399; }
+.form-error { color: #f87171; }
+
+#wl-email { min-width: 0; }
+a:focus-visible,
+button:focus-visible,
+input:focus-visible { outline: 2px solid #7dd3fc; outline-offset: 5px; }
+
+@media (max-width: 767px) {
+  .hero { min-height: auto; padding: 32px 20px 48px; }
+  .hero-wordmark { margin-bottom: 48px; }
+  .stats-grid { margin-top: 48px; }
+  .stream-pipeline-box { padding: 20px 16px; }
+  .pipeline-grid { gap: 32px; }
+  .stream-feed-item { padding: 10px 8px; gap: 10px; font-size: 11px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+   .hero-video { display: none; }
+  .stream-feed-item { animation: none; }
 }
 
 @keyframes slideFeed {
@@ -123,109 +195,17 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-.sim-modes {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  gap: 10px;
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 100;
+  padding: 12px 16px;
+  background: #fff;
+  color: #000;
+  transform: translateY(-180%);
 }
-
-@media (max-width: 720px) {
-  /* Beat the header rules in the later style block in index.html. */
-  .sd-header-wrapper.sd-header-wrapper {
-    padding: 10px 12px;
-    padding-top: max(10px, env(safe-area-inset-top));
-  }
-
-  header.sd-unified-header {
-    gap: 8px;
-    max-width: 100%;
-    padding: 4px 6px 4px 8px;
-  }
-
-  nav.sd-unified-nav {
-    display: none;
-  }
-
-  a.sd-brand-left {
-    min-width: 0;
-    gap: 8px;
-  }
-
-  a.sd-brand-left .sd-brand-icon-wrap {
-    width: 32px;
-    height: 32px;
-    flex-shrink: 0;
-  }
-
-  a.sd-brand-left .sd-brand-name {
-    font-size: 12.5px;
-    letter-spacing: 0.08em;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  a.sd-header-access {
-    flex-shrink: 0;
-    font-size: 12px;
-    padding: 7px 12px;
-    white-space: nowrap;
-  }
-}
-
-@media (max-width: 640px) {
-  div.sim-toolbar {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  div.sim-modes {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    justify-items: center;
-    gap: 8px;
-  }
-
-  div.sim-modes .mode-btn {
-    font-size: 11px;
-    padding: 6px 10px;
-  }
-
-  div.sim-modes .mode-btn:last-child {
-    grid-column: 1 / -1;
-  }
-}
-
-.flow-beam {
-  position: relative;
-  overflow: hidden;
-}
-
-.flow-beam::after {
-  content: "";
-  position: absolute;
-  left: -1px;
-  top: 0;
-  width: 4px;
-  height: 28px;
-  border-radius: 999px;
-  background: linear-gradient(to bottom, transparent, #e0f2fe 20%, #38bdf8 55%, #a855f7 85%, transparent);
-  box-shadow: 0 0 10px rgba(56, 189, 248, 0.9);
-  transform: translateY(-32px);
-  animation: beamDown 1.8s cubic-bezier(0.45, 0, 0.55, 1) infinite;
-}
-
-@keyframes beamDown {
-  0% { transform: translateY(-32px); opacity: 0; }
-  18% { opacity: 1; }
-  100% { transform: translateY(84px); opacity: 0; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .stream-feed-item,
-  .ambient-flow,
-  .flow-beam::after {
-    animation: none;
-  }
-}
+.skip-link:focus { transform: translateY(0); }
+.privacy-link { color: #7dd3fc; text-decoration: underline; text-underline-offset: 3px; }
+html[data-motion-paused="true"] .stream-feed-item { animation: none; }
+html[data-motion-paused="true"] { scroll-behavior: auto; }

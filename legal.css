@@ -1,0 +1,27 @@
+@font-face {
+  font-family: "Geist Pixel Circle";
+  src: url("/fonts/GeistPixel-Circle.woff2") format("woff2");
+  font-display: swap;
+}
+* { box-sizing: border-box; }
+html { color-scheme: dark; scroll-padding-top: 24px; }
+body { margin: 0; background: #090a0e; color: #e4e4e7; font: 16px/1.75 system-ui, -apple-system, sans-serif; }
+a { color: #7dd3fc; text-underline-offset: 4px; overflow-wrap: anywhere; }
+a:hover { color: #e0f2fe; }
+a:focus-visible { outline: 2px solid #7dd3fc; outline-offset: 5px; }
+.legal-header, main, .legal-footer { width: min(100% - 40px, 800px); margin-inline: auto; }
+.legal-header { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding-block: 28px; border-bottom: 1px solid #292a32; }
+.legal-brand { font-family: "Geist Pixel Circle", monospace; color: #fff; text-decoration: none; font-size: 24px; }
+main { padding-block: 56px; }
+main:focus { outline: none; }
+h1 { margin: 12px 0 16px; color: #fff; font: 400 clamp(32px, 6vw, 48px)/1.2 "Geist Pixel Circle", monospace; overflow-wrap: anywhere; }
+h2 { margin: 36px 0 12px; color: #fff; font-size: 21px; line-height: 1.4; }
+p { margin: 0 0 16px; }
+.legal-eyebrow { color: #7dd3fc; font: 12px/1.5 ui-monospace, monospace; text-transform: uppercase; letter-spacing: .12em; }
+.legal-updated { color: #a1a1aa; font-size: 14px; margin-bottom: 36px; }
+.legal-footer { padding-block: 28px 40px; border-top: 1px solid #292a32; font-size: 14px; }
+.legal-footer nav { display: flex; flex-wrap: wrap; gap: 12px 24px; margin-bottom: 20px; }
+[aria-current="page"] { color: #fff; }
+.skip-link { position: fixed; top: 12px; left: 12px; z-index: 100; padding: 12px 16px; background: #fff; color: #090a0e; transform: translateY(-180%); }
+.skip-link:focus { transform: translateY(0); color: #090a0e; }
+@media (max-width: 480px) { .legal-header { align-items: flex-start; flex-direction: column; gap: 10px; } main { padding-block: 36px; } }
